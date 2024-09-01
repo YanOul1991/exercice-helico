@@ -317,9 +317,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 088cdc21acce9f049b337a27d8a3ed09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vitesseHelice: {x: 0, y: 720, z: 0}
-  moteurEnMarche: 0
-  vitesseRotationMax: 0
+  vitesseHelice: {x: 0, y: 0, z: 0}
+  vitesseRotationMax: 1800
   acceleration: 0
 --- !u!1 &608117638
 GameObject:
@@ -1006,7 +1005,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8fc1d54f9439793418d4bc85bf842462, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 107.5558
+      value: 105.86
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 8fc1d54f9439793418d4bc85bf842462, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1058,6 +1057,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8fc1d54f9439793418d4bc85bf842462, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1180748603}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 8fc1d54f9439793418d4bc85bf842462, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1180748610}
     - targetCorrespondingSourceObject: {fileID: -723093586985912345, guid: 8fc1d54f9439793418d4bc85bf842462, type: 3}
       insertIndex: -1
       addedObject: {fileID: 480418511}
@@ -1078,9 +1080,9 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1180748602}
   serializedVersion: 4
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: 0.05
+  m_Mass: 200
+  m_Drag: 1
+  m_AngularDrag: 2
   m_CenterOfMass: {x: 0, y: 0, z: 0}
   m_InertiaTensor: {x: 1, y: 1, z: 1}
   m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -1092,7 +1094,7 @@ Rigidbody:
     m_Bits: 0
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 80
@@ -1136,10 +1138,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 088cdc21acce9f049b337a27d8a3ed09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vitesseHelice: {x: 0, y: 50, z: 0}
-  moteurEnMarche: 1
+  vitesseHelice: {x: 0, y: 0, z: 0}
   vitesseRotationMax: 1800
   acceleration: 0
+--- !u!114 &1180748610
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1180748602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bffe9e27e180faa46bd2b5a637553eb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  vitesseAvant: 0
+  vitesseAvantMax: 0
+  vitesseTourne: 0
+  vitesseTourneMax: 0
 --- !u!1 &1490122168
 GameObject:
   m_ObjectHideFlags: 0
