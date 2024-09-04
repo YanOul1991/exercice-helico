@@ -25,31 +25,23 @@ public class TournerHelice : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		// Detection touche entree
-		if (Input.GetKeyDown(KeyCode.Return))
-		{
-			// Change l'etat du moteur
-			moteurEnMarche = !moteurEnMarche;
-		}
+		// Si on appuit sur la touche Retour, changement de l'etat du moteur
+		if (Input.GetKeyDown(KeyCode.Return)) moteurEnMarche = !moteurEnMarche;
+
 		// Acceleration progressive des helices si le moteur est en marche jusqu'a vitesse max
 		if (moteurEnMarche)
 		{
 			// Acceleration lineraire des helices
 			// Augmenetation de la vitesse a chaque seconde jusqu'a atteindre la vitesse max
-			if (vitesseHelice.y < vitesseRotationMax)
-			{
-				vitesseHelice.y = Mathf.Clamp(vitesseHelice.y += acceleration, 0f, vitesseRotationMax);
-			}
+			vitesseHelice.y = Mathf.Clamp(vitesseHelice.y += acceleration, 0f, vitesseRotationMax);
 		}
-		else // Helice ralenti jusqua a un minium de 0
+		else
 		{
-			if (vitesseHelice.y > 0)
-			{
-				vitesseHelice.y = Mathf.Clamp(vitesseHelice.y -= acceleration, 0f, vitesseRotationMax);
-			}
+			// Helice ralenti jusqua a un minium de 0
+			vitesseHelice.y = Mathf.Clamp(vitesseHelice.y -= acceleration, 0f, vitesseRotationMax);
 		}
 	}
-
+	
 	void FixedUpdate()
 	{
 		// Application des vitesses de roations aux helices

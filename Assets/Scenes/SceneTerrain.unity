@@ -899,8 +899,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   vitesseHelice: {x: 0, y: 0, z: 0}
-  vitesseRotationMax: 5000
-  acceleration: 10
+  vitesseRotationMax: 2500
+  acceleration: 5
 --- !u!114 &1180748610
 MonoBehaviour:
   m_ObjectHideFlags: 0

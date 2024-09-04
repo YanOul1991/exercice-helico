@@ -30,7 +30,7 @@ public class DeplacementHelico : MonoBehaviour
     void Update()
     {
         // Le multiplicatuer de force dependra de la vitesse des helices
-        multiplicateurForce = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y;
+        multiplicateurForce = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y * 2;
 
         // DEPLACEMENT DE MONTEE ET DESCENTE
         // Input.GetAxis("Horizontal");
@@ -45,15 +45,11 @@ public class DeplacementHelico : MonoBehaviour
         // DEPLACEMENT AVANT
         // Lorsque la touche q est appuye la vitesse augmente a chaque fois
         // Jusqu'a atteindre la vitesse de deplacement avant max
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            vitesseAvant = Mathf.Clamp(vitesseAvant += vitesseAvantMax/4, 0, vitesseAvantMax);
-        }
-        // Lorsque a chaque fois que la touche E est appuye la vitesse diminue jusqua un minimum de 0
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            vitesseAvant = Mathf.Clamp(vitesseAvant -= vitesseAvantMax/4, 0, vitesseAvantMax);
-        }
+        if (Input.GetKeyDown(KeyCode.Q)) vitesseAvant = Mathf.Clamp(vitesseAvant += vitesseAvantMax/4, 0, vitesseAvantMax);
+
+        // Lorsque a chaque fois que la touche E est appuye 
+        // la vitesse diminue jusqua un minimum de 0
+        if (Input.GetKeyDown(KeyCode.E)) vitesseAvant = Mathf.Clamp(vitesseAvant -= vitesseAvantMax/4, 0, vitesseAvantMax);
     }
 
     // Fonction stable a 50FPS, reservee aux objets physiques
