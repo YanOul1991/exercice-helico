@@ -37,28 +37,24 @@ public class GestionnnaireCameras : MonoBehaviour
     {
         /* ====================================== CAMERAS ACTIVES ====================================== */
 
-        // Si on appuit sur une touche du clavier
-        if (UnityEngine.Input.anyKeyDown)
+        // Regarde si la touche M est appuye
+        if (UnityEngine.Input.GetKeyDown(KeyCode.M))
         {
-            // Regarde si cest la touche M
-            if (UnityEngine.Input.GetKeyDown(KeyCode.M))
-            { 
-                // Change l'etat du bool sonGlobale
-                sonGlobale = !sonGlobale;
-            }
-            
-            // Regarde si la touche fait parties des numero de camera (1, 2, 3 ,4)
-            if (numCamera.Contains(UnityEngine.Input.inputString))
-            {
-                // Desactivation de la camera active
-                Camera.main.gameObject.SetActive(false);
-
-                // Activation de la camera selon le numero de camera choisit
-                lesCameras[Array.IndexOf(numCamera, UnityEngine.Input.inputString)].SetActive(true);
-            }
-
-            // Applique l'etat du AudioListener de la camera active selon l'etat du bool sonGlobale
-            Camera.main.GetComponent<AudioListener>().enabled = sonGlobale;
+            // Change l'etat du bool sonGlobale
+            sonGlobale = !sonGlobale;
         }
+
+        // Regarde si la touche fait parties des numero de camera (1, 2, 3 ,4)
+        if (numCamera.Contains(UnityEngine.Input.inputString))
+        {
+            // Desactivation de la camera active
+            Camera.main.gameObject.SetActive(false);
+
+            // Activation de la camera selon le numero de camera choisit
+            lesCameras[Array.IndexOf(numCamera, UnityEngine.Input.inputString)].SetActive(true);
+        }
+
+        // Applique l'etat du AudioListener de la camera active selon l'etat du bool sonGlobale
+        Camera.main.GetComponent<AudioListener>().enabled = sonGlobale;
     }
 }

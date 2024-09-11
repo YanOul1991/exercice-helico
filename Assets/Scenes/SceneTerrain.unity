@@ -14,10 +14,10 @@ OcclusionCullingSettings:
 RenderSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 10
-  m_Fog: 0
+  m_Fog: 1
   m_FogColor: {r: 0.4056604, g: 0.4056604, b: 0.4056604, a: 1}
   m_FogMode: 2
-  m_FogDensity: 0.00035
+  m_FogDensity: 0.001
   m_LinearFogStart: 100
   m_LinearFogEnd: 1000
   m_AmbientSkyColor: {r: 0.212, g: 0.227, b: 0.259, a: 1}
@@ -714,6 +714,7 @@ GameObject:
   - component: {fileID: 963194228}
   - component: {fileID: 963194227}
   - component: {fileID: 963194226}
+  - component: {fileID: 963194229}
   m_Layer: 0
   m_Name: CameraFPS
   m_TagString: MainCamera
@@ -795,6 +796,21 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1180748613}
   m_LocalEulerAnglesHint: {x: 12.89, y: -1.88, z: 0.028}
+--- !u!114 &963194229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 963194225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c4b3d4c5b53d6bc4697a3d455591e56f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  trembleMax: 0.02
+  posInitiale: {x: 0, y: 0, z: 0}
+  refHelice: {fileID: 1180748605}
 --- !u!1001 &971604841
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1399,6 +1415,8 @@ MonoBehaviour:
   - {fileID: 1569970180}
   - {fileID: 490772918}
   - {fileID: 870023161}
+  numCamera: []
+  sonGlobale: 1
 --- !u!1 &1490122168
 GameObject:
   m_ObjectHideFlags: 0

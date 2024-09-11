@@ -59,30 +59,18 @@ public class DeplacementHelico : MonoBehaviour
         /* ===================================== SONS ===================================== */
 
         // SONS DES HELICES
-        // Vitesse reel / vitesse max  = une valeur entre 0 et 1 ce qui sera la valeur du volume de l'AudioSource
-        GetComponent<AudioSource>().volume = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax;
-        // La vitesse de pitch = 0.5 * la moitier du volume (entre 0 et 0.5). Pitch varie donc entre 0.5 en 1
-        GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);
-
-        // Lorsque on demmare le moteur, demmarage du son des helices
-        if (heliceRef.GetComponent<TournerHelice>().moteurEnMarche)
+        // Lorsque on demmare le moteur, et qu'il n'est pas deja en train de jouer demmarage du son des helices
+        if (heliceRef.GetComponent<TournerHelice>().moteurEnMarche && !GetComponent<AudioSource>().isPlaying)
         {
             // Fait jouer le son des helices
             GetComponent<AudioSource>().Play();
         }
 
-        // SON GLOBALE
-        // Lorsqu'on appuit sur la touche M
-        // if (Input.GetKeyDown(KeyCode.M))
-        // {   
-        //     Camera[] lesCamera = Camera.allCameras;
-        //     // Active et desactive le son globale du jeu
-        //     // Camera.main.gameObject.GetComponent<AudioListener>().enabled = !Camera.main.gameObject.GetComponent<AudioListener>().isActiveAndEnabled;
-        //     for (int i = 0; i < lesCamera.Length; i++)
-        //     {
-        //         lesCamera[i].GetComponent<AudioListener>().enabled = !lesCamera[i].GetComponent<AudioListener>().isActiveAndEnabled;
-        //     }
-        // }
+        // Vitesse reel / vitesse max  = une valeur entre 0 et 1 ce qui sera la valeur du volume de l'AudioSource
+        GetComponent<AudioSource>().volume = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax;
+        // La vitesse de pitch = 0.5 * la moitier du volume (entre 0 et 0.5). Pitch varie donc entre 0.5 en 1
+        GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);
+
     }
 
     // Fonction stable a 50FPS, reservee aux objets physiques
