@@ -12,7 +12,7 @@ public class TournerHelice : MonoBehaviour
 {
 	// DECLARATION DES VARIABLES	
 	public Vector3 vitesseHelice; // Variable Public Vector3 qui memorisera les vitesses des helices
-	private bool moteurEnMarche; // Variable Priavte bool qui memorise l'etat des helice
+	public bool moteurEnMarche; // Variable Priavte bool qui memorise l'etat des helice
 	public float vitesseRotationMax; // Variable public float pour la vitesse de rotation max des helices
 	public float acceleration; // Variable private float pour memoriser les accelerations des helices
 

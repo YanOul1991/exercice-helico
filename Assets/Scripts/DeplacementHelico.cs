@@ -1,13 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.PlayerLoop;
 
 /* 
     Script de gestion des deplacments de l'helicoptere de deplacment, montee et descente en altitude et rotation sur lui-meme.
+    Gestion des sons de helices de l'helico et du son globale
     Par : Yanis Oulmane
-    Derniere Modification 04-09-2024
+    Derniere Modification 11-09-2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
@@ -19,16 +20,12 @@ public class DeplacementHelico : MonoBehaviour
     public float vitesseAvantMax; // Variable qui memorize la vitesse de deplacement avant maximal de l'helico
     public GameObject heliceRef; // Variables Public GameObject qui sera reference aux helices de l'helico pour acceder a leur propriete de vitesse
 
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     // Update() pour detecter les touches, pour appliquer les forces c'est dans le FixedUpdate()
     void Update()
     {
+
+        /* ==========================  FORCES DES DEPLACEMENTS ========================== */
         // Le multiplicatuer de force dependra de la vitesse des helices
         multiplicateurForce = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y * 2;
 
@@ -43,13 +40,49 @@ public class DeplacementHelico : MonoBehaviour
         forceTorsion = valeurAxeH * multiplicateurForce;
 
         // DEPLACEMENT AVANT
-        // Lorsque la touche q est appuye la vitesse augmente a chaque fois
-        // Jusqu'a atteindre la vitesse de deplacement avant max
-        if (Input.GetKeyDown(KeyCode.Q)) vitesseAvant = Mathf.Clamp(vitesseAvant += vitesseAvantMax/4, 0, vitesseAvantMax);
+        // Ajustement de la vitesse de deplacement avant de helico 
+        // La touche Q accelere le deplacement avant avec 4 niveaux de vitesse jusqua atteindre la vitesse max
+        // La touche E ralenti le deplacement avant avec 4 niveaux de vitesse jusqua atteindre la vitesse de 0
 
-        // Lorsque a chaque fois que la touche E est appuye 
-        // la vitesse diminue jusqua un minimum de 0
-        if (Input.GetKeyDown(KeyCode.E)) vitesseAvant = Mathf.Clamp(vitesseAvant -= vitesseAvantMax/4, 0, vitesseAvantMax);
+        // Vitesse peut augmenter seulement si le moteur est en marche
+        if (Input.GetKeyDown(KeyCode.Q) && heliceRef.GetComponent<TournerHelice>().moteurEnMarche)
+        {
+            // Augmentation de la vitesse avant
+            vitesseAvant = Mathf.Clamp(vitesseAvant += vitesseAvantMax / 4, 0, vitesseAvantMax);
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            // Diminution de la vitesse avant 
+            vitesseAvant = Mathf.Clamp(vitesseAvant -= vitesseAvantMax / 4, 0, vitesseAvantMax);
+        }
+
+        /* ===================================== SONS ===================================== */
+
+        // SONS DES HELICES
+        // Vitesse reel / vitesse max  = une valeur entre 0 et 1 ce qui sera la valeur du volume de l'AudioSource
+        GetComponent<AudioSource>().volume = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax;
+        // La vitesse de pitch = 0.5 * la moitier du volume (entre 0 et 0.5). Pitch varie donc entre 0.5 en 1
+        GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);
+
+        // Lorsque on demmare le moteur, demmarage du son des helices
+        if (heliceRef.GetComponent<TournerHelice>().moteurEnMarche)
+        {
+            // Fait jouer le son des helices
+            GetComponent<AudioSource>().Play();
+        }
+
+        // SON GLOBALE
+        // Lorsqu'on appuit sur la touche M
+        // if (Input.GetKeyDown(KeyCode.M))
+        // {   
+        //     Camera[] lesCamera = Camera.allCameras;
+        //     // Active et desactive le son globale du jeu
+        //     // Camera.main.gameObject.GetComponent<AudioListener>().enabled = !Camera.main.gameObject.GetComponent<AudioListener>().isActiveAndEnabled;
+        //     for (int i = 0; i < lesCamera.Length; i++)
+        //     {
+        //         lesCamera[i].GetComponent<AudioListener>().enabled = !lesCamera[i].GetComponent<AudioListener>().isActiveAndEnabled;
+        //     }
+        // }
     }
 
     // Fonction stable a 50FPS, reservee aux objets physiques
