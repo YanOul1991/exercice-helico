@@ -10,13 +10,14 @@ using UnityEngine.Windows;
     Script de gestion des camera. Activation et desactivation des camera appropries selon les inputes de l'utilisateur de facon dynamique
     Gestion de son globale en activant et desactivant les AudioListeners de la camera Active
     Par : Yanis Oulmane
-    Derniere Modification 11-09-2024
+    Derniere Modification 16-09-2024
  */
 public class GestionnnaireCameras : MonoBehaviour
 {
     public GameObject[] lesCameras; // Array de GameObjects qui contientra tous les objets cameras
     public string[] numCamera; // Array de string des numeros des cameras
     public bool sonGlobale = true; // Vairbla pour activer ou mute le son global, est a true par defaut
+    public GameObject refHelico; // Reference a l'objet helico pour acceder a sa variable finJeu de son scripte
 
     // Start is called before the first frame update
     void Start()
@@ -44,8 +45,8 @@ public class GestionnnaireCameras : MonoBehaviour
             sonGlobale = !sonGlobale;
         }
 
-        // Regarde si la touche fait parties des numero de camera (1, 2, 3 ,4)
-        if (numCamera.Contains(UnityEngine.Input.inputString))
+        // Regarde si la touche fait parties des numero de camera (1, 2, 3 ,4) et que la partie n'est pas termine
+        if (numCamera.Contains(UnityEngine.Input.inputString) && !refHelico.GetComponent<DeplacementHelico>().finJeu)
         {
             // Desactivation de la camera active
             Camera.main.gameObject.SetActive(false);
@@ -54,6 +55,7 @@ public class GestionnnaireCameras : MonoBehaviour
             lesCameras[Array.IndexOf(numCamera, UnityEngine.Input.inputString)].SetActive(true);
         }
 
+        // Si partie est termine
         // Applique l'etat du AudioListener de la camera active selon l'etat du bool sonGlobale
         Camera.main.GetComponent<AudioListener>().enabled = sonGlobale;
     }

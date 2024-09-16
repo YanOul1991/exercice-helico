@@ -6,7 +6,7 @@ using UnityEngine;
 	Controle des rotation des deux helices de l'helicoptere avec la methode transform.Rotate().
 	Alternace marche/arret avec la touche retour du clavier et application d'un effet d'acceleration lors du demmarage des helices.
 	Par : Yanis Oulmane
-	Derniere modification : 04-09-2024
+	Derniere modification : 16-09-2024
  */
 public class TournerHelice : MonoBehaviour
 {
@@ -15,6 +15,7 @@ public class TournerHelice : MonoBehaviour
 	public bool moteurEnMarche; // Variable Priavte bool qui memorise l'etat des helice
 	public float vitesseRotationMax; // Variable public float pour la vitesse de rotation max des helices
 	public float acceleration; // Variable private float pour memoriser les accelerations des helices
+	public GameObject refHelico; // Reference a l'objet helico pour acceder a sa variable finJeu de son scripte
 
 	// Start is called before the first frame update
 	void Start()
@@ -25,8 +26,16 @@ public class TournerHelice : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		// Si on appuit sur la touche Retour, changement de l'etat du moteur
-		if (Input.GetKeyDown(KeyCode.Return)) moteurEnMarche = !moteurEnMarche;
+		// Si on appuit sur la touche Retour, changement de l'etat du moteur et que le jeu n'est pas termine
+		if (Input.GetKeyDown(KeyCode.Return) && !refHelico.GetComponent<DeplacementHelico>().finJeu) moteurEnMarche = !moteurEnMarche;
+
+		if(refHelico.GetComponent<DeplacementHelico>().finJeu) 
+		{
+			// Le moteur s'arrete
+			moteurEnMarche = false;
+			// Grande acceleration pour que les helices sarrentent rapidement
+			acceleration = 100;
+		}
 
 		// Acceleration progressive des helices si le moteur est en marche jusqu'a vitesse max
 		if (moteurEnMarche)
@@ -40,6 +49,7 @@ public class TournerHelice : MonoBehaviour
 			// Helice ralenti jusqua a un minium de 0
 			vitesseHelice.y = Mathf.Clamp(vitesseHelice.y -= acceleration, 0f, vitesseRotationMax);
 		}
+		
 	}
 	
 	void FixedUpdate()
