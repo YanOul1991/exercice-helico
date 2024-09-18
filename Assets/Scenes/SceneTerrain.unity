@@ -189,9 +189,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1490122169}
     m_Modifications:
+    - target: {fileID: 100000, guid: 8e980bd6db5122742835931be3b46dd6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 8e980bd6db5122742835931be3b46dd6, type: 3}
       propertyPath: m_Name
       value: Rocher2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 8e980bd6db5122742835931be3b46dd6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 8e980bd6db5122742835931be3b46dd6, type: 3}
       propertyPath: m_LocalScale.x
@@ -454,9 +462,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1490122169}
     m_Modifications:
+    - target: {fileID: 100000, guid: 563fad5a261798a47a36f07bf1b0a1a0, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 563fad5a261798a47a36f07bf1b0a1a0, type: 3}
       propertyPath: m_Name
       value: Rocher4
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 563fad5a261798a47a36f07bf1b0a1a0, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 563fad5a261798a47a36f07bf1b0a1a0, type: 3}
       propertyPath: m_LocalScale.x
@@ -835,9 +851,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1490122169}
     m_Modifications:
+    - target: {fileID: 100000, guid: 563fad5a261798a47a36f07bf1b0a1a0, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 563fad5a261798a47a36f07bf1b0a1a0, type: 3}
       propertyPath: m_Name
       value: Rocher4
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 563fad5a261798a47a36f07bf1b0a1a0, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 563fad5a261798a47a36f07bf1b0a1a0, type: 3}
       propertyPath: m_LocalScale.x
@@ -913,9 +937,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1490122169}
     m_Modifications:
+    - target: {fileID: 100000, guid: d4f68011cb3612a448301e7826620bca, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: d4f68011cb3612a448301e7826620bca, type: 3}
       propertyPath: m_Name
       value: Rocher3
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: d4f68011cb3612a448301e7826620bca, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: d4f68011cb3612a448301e7826620bca, type: 3}
       propertyPath: m_LocalScale.x
@@ -1307,7 +1339,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bffe9e27e180faa46bd2b5a637553eb3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vitesseAvant: 0
   vitesseAvantMax: 10000
   heliceRef: {fileID: 480418507}
   sonCollecte: {fileID: 8300000, guid: fd97f923a6d8f41f6887d2dc55ad87d8, type: 3}
@@ -1959,9 +1990,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1490122169}
     m_Modifications:
+    - target: {fileID: 100000, guid: 8e980bd6db5122742835931be3b46dd6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 100002, guid: 8e980bd6db5122742835931be3b46dd6, type: 3}
       propertyPath: m_Name
       value: Rocher2
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 8e980bd6db5122742835931be3b46dd6, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 400002, guid: 8e980bd6db5122742835931be3b46dd6, type: 3}
       propertyPath: m_LocalScale.x
@@ -2128,7 +2167,7 @@ GameObject:
   - component: {fileID: 1907801612}
   m_Layer: 0
   m_Name: piste-depart
-  m_TagString: Untagged
+  m_TagString: objTerrains
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -2240,7 +2279,7 @@ GameObject:
   - component: {fileID: 2104210928}
   m_Layer: 0
   m_Name: Terrain
-  m_TagString: Untagged
+  m_TagString: objTerrains
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 2147483647

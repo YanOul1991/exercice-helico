@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - objPoint
   - bidon
+  - objTerrains
   layers:
   - Default
   - TransparentFX

@@ -8,17 +8,17 @@ using UnityEngine.SceneManagement;
 /* 
     Script de gestion des deplacments de l'helicoptere de deplacment, montee et descente en altitude et rotation sur lui-meme.
     Gestion des sons de helices de l'helico et du son globale
-    Gestion collisions de l'helico et effet d'explosion de celui-ci
+    Gestion collisions de l'helico et de ce qui se passe suite a la destruction de celui-ci
     Par : Yanis Oulmane
-    Derniere Modification 16-09-2024
+    Derniere Modification 18-09-2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
     /// DECLARATION DES VARIABLES    
     float multiplicateurForce; // variable qui memorize un multiplicateur de force qui sera applique aux forces qui font deplacer l'helico
     float forceDeplacement; // Variable qui memorise les forces de deplacement sur les axes
-    float forceTorsion; // Variable qui memorise la force de torsion/rotation sur l'axe Y
-    public float vitesseAvant; // Variable qui memorize la vitesse de deplacment vers l'avant de l'helico
+    float forceRotation; // Variable qui memorise la force de torsion/rotation sur l'axe Y
+    float vitesseAvant; // Variable qui memorize la vitesse de deplacment vers l'avant de l'helico
     public float vitesseAvantMax; // Variable qui memorize la vitesse de deplacement avant maximal de l'helico
     public GameObject heliceRef; // Variables Public GameObject qui sera reference aux helices de l'helico pour acceder a leur propriete de vitesse
     public AudioClip sonCollecte; // Son qui ser ajoue lorsque une sphere sera collecte
@@ -26,13 +26,13 @@ public class DeplacementHelico : MonoBehaviour
     public GameObject cameraFinJeu; // Camera qui sera automatiquement la camera active quand l'helico sera detruit
     public bool finJeu = false; // Variable qui verifie si le joueur est mort
 
-
     // Update is called once per frame
     // Update() pour detecter les touches, pour appliquer les forces c'est dans le FixedUpdate()
     void Update()
     {
         /* ==========================  FORCES DES DEPLACEMENTS ========================== */
         // Le multiplicatuer de force dependra de la vitesse des helices
+        // Donc plus les helice tournent vite plus le joueur a un meilleur controle su le mouvement
         multiplicateurForce = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y * 2;
 
         // Accepte les input seulement si la partie n'est pas termine
@@ -41,33 +41,34 @@ public class DeplacementHelico : MonoBehaviour
             // DEPLACEMENT DE MONTEE ET DESCENTE
             // Input.GetAxis("Horizontal");
             float valeurAxeV = Input.GetAxis("Vertical"); // Retourne valeur entre -1 et 1
+            // Multiplication de cette force selon la vitesse des helices
             forceDeplacement = valeurAxeV * multiplicateurForce;
 
             // DEPLACEMENT DE ROTATION  
             // Input.GetAxis("Horizontal");
             float valeurAxeH = Input.GetAxis("Horizontal"); // Retourne valeur entre -1 et 1
-            forceTorsion = valeurAxeH * multiplicateurForce;
+            // Multiplication de cette force selon la vitesse des helices
+            forceRotation = valeurAxeH * multiplicateurForce;
 
             // DEPLACEMENT AVANT
             // Ajustement de la vitesse de deplacement avant de helico 
-            // La touche Q accelere le deplacement avant avec 4 niveaux de vitesse jusqua atteindre la vitesse max
-            // La touche E ralenti le deplacement avant avec 4 niveaux de vitesse jusqua atteindre la vitesse de 0
+            // La touche Q accelere le deplacement avant jusqua atteindre la vitesse max
+            // La touche E ralenti le deplacement avant jusqua atteindre la vitesse de 0
 
             // Vitesse peut augmenter seulement si le moteur est en marche
-            if (Input.GetKeyDown(KeyCode.Q) && heliceRef.GetComponent<TournerHelice>().moteurEnMarche)
+            if (Input.GetKey(KeyCode.Q) && heliceRef.GetComponent<TournerHelice>().moteurEnMarche)
             {
                 // Augmentation de la vitesse avant
-                vitesseAvant = Mathf.Clamp(vitesseAvant += vitesseAvantMax / 4, 0, vitesseAvantMax);
+                vitesseAvant = Mathf.Clamp(vitesseAvant += vitesseAvantMax / 50, 0, vitesseAvantMax);
             }
-            if (Input.GetKeyDown(KeyCode.E))
+            if (Input.GetKey(KeyCode.E))
             {
                 // Diminution de la vitesse avant 
-                vitesseAvant = Mathf.Clamp(vitesseAvant -= vitesseAvantMax / 4, 0, vitesseAvantMax);
+                vitesseAvant = Mathf.Clamp(vitesseAvant -= vitesseAvantMax / 50, 0, vitesseAvantMax);
             }
         }
 
         /* ===================================== SONS ===================================== */
-
         // SONS DES HELICES
         // Lorsque on demmare le moteur, et qu'il n'est pas deja en train de jouer demmarage du son des helices
         if (heliceRef.GetComponent<TournerHelice>().moteurEnMarche && !GetComponent<AudioSource>().isPlaying)
@@ -86,15 +87,16 @@ public class DeplacementHelico : MonoBehaviour
     // Fonction stable a 50FPS, reservee aux objets physiques
     void FixedUpdate()
     {
-        // Si les helice tournent(vitesse > 0)
+        // Si les helice tournent(vitesse > 100)
         // *** LORSQUE L'HELICO SERA DETRUIT, IL UTILISERA PAR DEFAUT LA GRAVITE, CAR VITESSE DES HELICES SERONS DE 0 ***
-        if (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y > 0)
+        if (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y > 100)
         {
             // Desactivation de la gravite
             GetComponent<Rigidbody>().useGravity = false;
         }
-        else // Si les helice ne tournent plus 
+        else
         {
+            // Si les helice ne tournent plus 
             // Reactivation de la gravite
             GetComponent<Rigidbody>().useGravity = true;
         }
@@ -102,7 +104,7 @@ public class DeplacementHelico : MonoBehaviour
         // Applique la force au Rigidbody
         // On utilise seulment une fois AddRelativeForce() / AddRelativeTorque();
         GetComponent<Rigidbody>().AddRelativeForce(0f, forceDeplacement, vitesseAvant);
-        GetComponent<Rigidbody>().AddRelativeTorque(0, forceTorsion, 0);
+        GetComponent<Rigidbody>().AddRelativeTorque(0, forceRotation, 0);
 
         // Rearrange les rotations de l'helico si la partie est encore en cours pour eviter qu'il penche
         // Sinon il peut aller n'importe comment
@@ -112,16 +114,38 @@ public class DeplacementHelico : MonoBehaviour
             transform.localEulerAngles = new Vector3(0f, transform.localEulerAngles.y, 0);
         }
     }
+
+    // Detection des collision
     private void OnCollisionEnter(Collision collision)
     {
         // En cas de constacte avec le terrain
-        if (collision.gameObject.name == "Terrain")
+        // Ajout du nom colmesh pour les rochets
+        if (collision.gameObject.name == "Terrain" || collision.gameObject.name == "colmesh")
         {
-            // Demare coroutine de fonction PartieTermine()
-            StartCoroutine(PartieTermine());
+            // Creation d'un array float[3] qui memorisera les velocites x, y et z
+            float[] lesVelocites = new float[3];
+
+            // Assignations des valeurs de velocites de helico
+            lesVelocites[0] = GetComponent<Rigidbody>().velocity.x;
+            lesVelocites[1] = GetComponent<Rigidbody>().velocity.y;
+            lesVelocites[2] = GetComponent<Rigidbody>().velocity.z; 
+            
+            // Boucle qui va analyser chaque valeur de velocite
+            foreach (float velocite in lesVelocites)
+            {
+                // Si une des velocites en valeur absolut est superieure a 10
+                if (MathF.Abs(velocite) > 10)
+                {
+                    // Demmare coroutine de fonction PartieTermine()
+                    StartCoroutine(PartieTermine());    
+                    // Arrete de la boucle
+                    break;
+                }
+            }
         }
     }
 
+    // Detection des collisions de type trigger
     private void OnTriggerEnter(Collider collision)
     {
         // Lorsque l'helico detecte un trigger collision avec un objet qui a la le tag bidon
@@ -142,6 +166,10 @@ public class DeplacementHelico : MonoBehaviour
         finJeu = true;
         // Active l'explosion
         animExplosion.SetActive(true);
+
+        // Change la couleur du mesh l'helico
+        GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.2f, 0, 1);
+        heliceRef.GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.2f, 0, 1);
 
         // Modification des proprietes du rigide body de l'helico : frag, angularDrag et freezeRotation
         GetComponent<Rigidbody>().drag = GetComponent<Rigidbody>().drag / 10;
