@@ -3,14 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 
 /* 
-	Controle des rotation des deux helices de l'helicoptere avec la methode transform.Rotate().
-	Alternace marche/arret avec la touche retour du clavier et application d'un effet d'acceleration lors du demmarage des helices.
+	Script de gestion des helices ayant les fonctionalites suivantes : 
+
+		- Controle de la rotation avec la methode transform.Rotate();
+		- Alternance marche / arret du moteur avec la touche 'Return';
+		- Effets d'accelerations au demarage et arret des helices;
+
 	Par : Yanis Oulmane
 	Derniere modification : 16-09-2024
  */
 public class TournerHelice : MonoBehaviour
 {
-	// DECLARATION DES VARIABLES	
+	/* =============================================================================================== */
+	/* ================================== DECLARATION DES VARIABLES ================================== */	
+	/* =============================================================================================== */
 	public Vector3 vitesseHelice; // Variable Public Vector3 qui memorisera les vitesses des helices
 	public bool moteurEnMarche; // Variable Priavte bool qui memorise l'etat des helice
 	public float vitesseRotationMax; // Variable public float pour la vitesse de rotation max des helices

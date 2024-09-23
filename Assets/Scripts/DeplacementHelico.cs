@@ -4,59 +4,85 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 /* 
-    Script de gestion des deplacments de l'helicoptere de deplacment, montee et descente en altitude et rotation sur lui-meme.
-    Gestion des sons de helices de l'helico et du son globale
-    Gestion collisions de l'helico et de ce qui se passe suite a la destruction de celui-ci
+    Script de l'helicoptere qui gere les fonctionnalites suivates :
+    
+        - Deplacments de l'helicoptere vers l'avant avec le touches 'Q' et 'E';
+        - Montee et descente en altitude et rotation sur lui-meme avec Input.GetAxis();
+        - Gestion des sons de helices de l'helico et du son globale;
+        - Gestion collisions de l'helico et de l'action qui suit selon l'objet qui a ete touche;
+        - Gestion de l'essence et des actions qui sont liees a la variation de celui-ci;
+
     Par : Yanis Oulmane
-    Derniere Modification 18-09-2024
+    Derniere Modification 23-09-2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
-    /// DECLARATION DES VARIABLES    
+    /* ================================================================================================= */
+    /* =================================== DECLARATION DES VARIABLES =================================== */
+    /* ================================================================================================= */
+
+    /* **************************** Variables pour gestion des deplacements **************************** */
     float multiplicateurForce; // variable qui memorize un multiplicateur de force qui sera applique aux forces qui font deplacer l'helico
     float forceDeplacement; // Variable qui memorise les forces de deplacement sur les axes
     float forceRotation; // Variable qui memorise la force de torsion/rotation sur l'axe Y
     float vitesseAvant; // Variable qui memorize la vitesse de deplacment vers l'avant de l'helico
     public float vitesseAvantMax; // Variable qui memorize la vitesse de deplacement avant maximal de l'helico
     public GameObject heliceRef; // Variables Public GameObject qui sera reference aux helices de l'helico pour acceder a leur propriete de vitesse
-    public AudioClip sonCollecte; // Son qui ser ajoue lorsque une sphere sera collecte
-    public GameObject animExplosion; // Effet explosion
-    public GameObject cameraFinJeu; // Camera qui sera automatiquement la camera active quand l'helico sera detruit
-    public bool finJeu = false; // Variable qui verifie si le joueur est mort
 
-    // Update is called once per frame
-    // Update() pour detecter les touches, pour appliquer les forces c'est dans le FixedUpdate()
+
+    /* ***************************** Variables pour gestion de l'essence ***************************** */
+    public float niveauEssenceMax; // niveau max de l'essence
+    public float niveauEssenceCourent; // Niveau en temp reel de l'essence
+    public Image imgNiveauEssence; // Variable qui memorise l'image qui represente le niveau d'essence
+
+
+    /* ************************* Variable pour fonctionalites suplementaires ************************* */
+    public bool finJeu = false; // Variable bool memorisant si l'helico est detruit, donc la fin du jeu
+    public AudioClip sonCollecte; // Son qui joue lors de la collecte d'un bidon d'essence
+    public GameObject animExplosion; // Effet particules d'explosion lors de la destruction de l'helico
+    public GameObject cameraFinJeu; // Camera active lors de la fin de la partie
+
+    /* ================================================================================================= */
+    /* ================================================================================================= */
+
+    // Fonction appele des le debut
+    void Start()
+    {
+        // Fait le plein d'essence
+        niveauEssenceCourent = niveauEssenceMax;
+    }
+
+    // Fonction update appele a chaque frame qui sera principalement pour les detections de touche et variations des variables de force pour les deplacements
     void Update()
     {
-        /* ==========================  FORCES DES DEPLACEMENTS ========================== */
-        // Le multiplicatuer de force dependra de la vitesse des helices
-        // Donc plus les helice tournent vite plus le joueur a un meilleur controle su le mouvement
+        /* ======================================================================================= */
+        /* ================================ FORCES DE DEPLACEMENT ================================ */
+        /* ======================================================================================= */
+
+        // Le multiplicateur de force varirera selon la vitesse des helices
         multiplicateurForce = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y * 2;
 
-        // Accepte les input seulement si la partie n'est pas termine
-        if (!finJeu)
+        // Accepte Inputs si la partie n'est pas termine et qu'il reste de l'essence
+        if (!finJeu && heliceRef.GetComponent<TournerHelice>().moteurEnMarche &&niveauEssenceCourent > 0)
         {
-            // DEPLACEMENT DE MONTEE ET DESCENTE
-            // Input.GetAxis("Horizontal");
-            float valeurAxeV = Input.GetAxis("Vertical"); // Retourne valeur entre -1 et 1
-            // Multiplication de cette force selon la vitesse des helices
-            forceDeplacement = valeurAxeV * multiplicateurForce;
+            /* ==================== DEPLACEMENT SUR LES AXES ==================== */
 
-            // DEPLACEMENT DE ROTATION  
-            // Input.GetAxis("Horizontal");
-            float valeurAxeH = Input.GetAxis("Horizontal"); // Retourne valeur entre -1 et 1
-            // Multiplication de cette force selon la vitesse des helices
-            forceRotation = valeurAxeH * multiplicateurForce;
+            // La force des deplacements seront affectees par le multiplicateur de force
+            // Deplacement vertical (monter / descendre)
+            forceDeplacement = Input.GetAxis("Vertical") * multiplicateurForce;
 
-            // DEPLACEMENT AVANT
-            // Ajustement de la vitesse de deplacement avant de helico 
+            // Deplacement  horizontal (rotation sur place)
+            forceRotation = Input.GetAxis("Horizontal") * multiplicateurForce;
+
+            
+            /* ======================= DEPLACEMENT AVANT ======================= */
             // La touche Q accelere le deplacement avant jusqua atteindre la vitesse max
             // La touche E ralenti le deplacement avant jusqua atteindre la vitesse de 0
 
-            // Vitesse peut augmenter seulement si le moteur est en marche
-            if (Input.GetKey(KeyCode.Q) && heliceRef.GetComponent<TournerHelice>().moteurEnMarche)
+            if (Input.GetKey(KeyCode.Q))
             {
                 // Augmentation de la vitesse avant
                 vitesseAvant = Mathf.Clamp(vitesseAvant += vitesseAvantMax / 50, 0, vitesseAvantMax);
@@ -68,7 +94,10 @@ public class DeplacementHelico : MonoBehaviour
             }
         }
 
-        /* ===================================== SONS ===================================== */
+        /* ====================================================================================== */
+        /* ======================================== SONS ======================================== */
+        /* ====================================================================================== */
+
         // SONS DES HELICES
         // Lorsque on demmare le moteur, et qu'il n'est pas deja en train de jouer demmarage du son des helices
         if (heliceRef.GetComponent<TournerHelice>().moteurEnMarche && !GetComponent<AudioSource>().isPlaying)
@@ -81,6 +110,9 @@ public class DeplacementHelico : MonoBehaviour
         GetComponent<AudioSource>().volume = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax;
         // La vitesse de pitch = 0.5 * la moitier du volume (entre 0 et 0.5). Pitch varie donc entre 0.5 en 1
         GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);
+
+        /* ==================================================================================== */
+        /* ================================= GESTION ESSENCE ================================= */
 
     }
 
@@ -113,6 +145,8 @@ public class DeplacementHelico : MonoBehaviour
             // Arrange les rotations de l'helico pour evite qu'il penche sur les axes X et Z
             transform.localEulerAngles = new Vector3(0f, transform.localEulerAngles.y, 0);
         }
+
+        GestionEssence();
     }
 
     // Detection des collision
@@ -128,8 +162,8 @@ public class DeplacementHelico : MonoBehaviour
             // Assignations des valeurs de velocites de helico
             lesVelocites[0] = GetComponent<Rigidbody>().velocity.x;
             lesVelocites[1] = GetComponent<Rigidbody>().velocity.y;
-            lesVelocites[2] = GetComponent<Rigidbody>().velocity.z; 
-            
+            lesVelocites[2] = GetComponent<Rigidbody>().velocity.z;
+
             // Boucle qui va analyser chaque valeur de velocite
             foreach (float velocite in lesVelocites)
             {
@@ -137,7 +171,7 @@ public class DeplacementHelico : MonoBehaviour
                 if (MathF.Abs(velocite) > 10)
                 {
                     // Demmare coroutine de fonction PartieTermine()
-                    StartCoroutine(PartieTermine());    
+                    StartCoroutine(PartieTermine());
                     // Arrete de la boucle
                     break;
                 }
@@ -156,6 +190,9 @@ public class DeplacementHelico : MonoBehaviour
 
             // Destruit cet objet
             Destroy(collision.gameObject);
+
+            // Augmente le niveau d'essence
+            niveauEssenceCourent += 30;
         }
     }
 
@@ -188,4 +225,14 @@ public class DeplacementHelico : MonoBehaviour
         // Relance la scene
         SceneManager.LoadScene(0);
     }
+
+    // Fonction qui gere le niveau d'essence
+    void GestionEssence()
+    {
+        niveauEssenceCourent -= 5 * Time.deltaTime;
+
+        // Ajustement de la barre blache representant le niveau d'essence (proprete fill amount)
+        imgNiveauEssence.fillAmount = niveauEssenceCourent / niveauEssenceMax;
+    }
+
 }
