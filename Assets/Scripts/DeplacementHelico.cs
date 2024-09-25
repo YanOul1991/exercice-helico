@@ -16,7 +16,7 @@ using UnityEngine.UI;
         - Gestion de l'essence et des actions qui sont liees a la variation de celui-ci;
 
     Par : Yanis Oulmane
-    Derniere Modification 23-09-2024
+    Derniere Modification 24-09-2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
@@ -66,7 +66,7 @@ public class DeplacementHelico : MonoBehaviour
         multiplicateurForce = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y * 2;
 
         // Accepte Inputs si la partie n'est pas termine et qu'il reste de l'essence
-        if (!finJeu && heliceRef.GetComponent<TournerHelice>().moteurEnMarche &&niveauEssenceCourent > 0)
+        if (!finJeu && heliceRef.GetComponent<TournerHelice>().moteurEnMarche && niveauEssenceCourent > 0)
         {
             /* ==================== DEPLACEMENT SUR LES AXES ==================== */
 
@@ -77,11 +77,10 @@ public class DeplacementHelico : MonoBehaviour
             // Deplacement  horizontal (rotation sur place)
             forceRotation = Input.GetAxis("Horizontal") * multiplicateurForce;
 
-            
             /* ======================= DEPLACEMENT AVANT ======================= */
+
             // La touche Q accelere le deplacement avant jusqua atteindre la vitesse max
             // La touche E ralenti le deplacement avant jusqua atteindre la vitesse de 0
-
             if (Input.GetKey(KeyCode.Q))
             {
                 // Augmentation de la vitesse avant
@@ -98,21 +97,21 @@ public class DeplacementHelico : MonoBehaviour
         /* ======================================== SONS ======================================== */
         /* ====================================================================================== */
 
-        // SONS DES HELICES
-        // Lorsque on demmare le moteur, et qu'il n'est pas deja en train de jouer demmarage du son des helices
+        /* ============== SON DES HELICES ============== */
+
+        // Regarde si le moteur de l'helico est en marche et que le son des helices ne joue pas
         if (heliceRef.GetComponent<TournerHelice>().moteurEnMarche && !GetComponent<AudioSource>().isPlaying)
         {
-            // Fait jouer le son des helices
+            // Joue le son des helices
             GetComponent<AudioSource>().Play();
         }
+
+        /* ======= VOLUME ET PITCH DES HELICES ======= */
 
         // Vitesse reel / vitesse max  = une valeur entre 0 et 1 ce qui sera la valeur du volume de l'AudioSource
         GetComponent<AudioSource>().volume = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax;
         // La vitesse de pitch = 0.5 * la moitier du volume (entre 0 et 0.5). Pitch varie donc entre 0.5 en 1
         GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);
-
-        /* ==================================================================================== */
-        /* ================================= GESTION ESSENCE ================================= */
 
     }
 
@@ -120,7 +119,7 @@ public class DeplacementHelico : MonoBehaviour
     void FixedUpdate()
     {
         // Si les helice tournent(vitesse > 100)
-        // *** LORSQUE L'HELICO SERA DETRUIT, IL UTILISERA PAR DEFAUT LA GRAVITE, CAR VITESSE DES HELICES SERONS DE 0 ***
+        // *** Remarque : Helico utilisera automatiquement la gravite lors de sa destruction ***
         if (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y > 100)
         {
             // Desactivation de la gravite
@@ -128,8 +127,7 @@ public class DeplacementHelico : MonoBehaviour
         }
         else
         {
-            // Si les helice ne tournent plus 
-            // Reactivation de la gravite
+            // Active la gravite dans le cas contraire
             GetComponent<Rigidbody>().useGravity = true;
         }
 
@@ -146,42 +144,43 @@ public class DeplacementHelico : MonoBehaviour
             transform.localEulerAngles = new Vector3(0f, transform.localEulerAngles.y, 0);
         }
 
+        // Appel a chaque 50fps la fonction de gestion de l'essence
         GestionEssence();
     }
 
     // Detection des collision
     private void OnCollisionEnter(Collision collision)
     {
-        // En cas de constacte avec le terrain
-        // Ajout du nom colmesh pour les rochets
-        if (collision.gameObject.name == "Terrain" || collision.gameObject.name == "colmesh")
+        /* ========================== COLLISIONS AVEC LE TERRAIN ========================== */
+
+        // Detection d'une collision avec un objet de tag "Terrain" pour inclure le terrain et les rochers
+        if (collision.gameObject.tag == "Terrain")
         {
-            // Creation d'un array float[3] qui memorisera les velocites x, y et z
-            float[] lesVelocites = new float[3];
-
-            // Assignations des valeurs de velocites de helico
-            lesVelocites[0] = GetComponent<Rigidbody>().velocity.x;
-            lesVelocites[1] = GetComponent<Rigidbody>().velocity.y;
-            lesVelocites[2] = GetComponent<Rigidbody>().velocity.z;
-
-            // Boucle qui va analyser chaque valeur de velocite
-            foreach (float velocite in lesVelocites)
+            // Boucle pour verifier chaque vector de la velocite (Vector3)
+            for (int i = 0; i < 3; i++)
             {
-                // Si une des velocites en valeur absolut est superieure a 10
-                if (MathF.Abs(velocite) > 10)
+                // Regarde si la valeur absolue est superieur a 7.5
+                if (MathF.Abs(GetComponent<Rigidbody>().velocity[i]) > 7.5)
                 {
-                    // Demmare coroutine de fonction PartieTermine()
+                    // Demmarage de coroutine PartieTermine()
                     StartCoroutine(PartieTermine());
-                    // Arrete de la boucle
+
+                    // Active l'explosion
+                    animExplosion.SetActive(true);
+
+                    // Arret de la boucle
                     break;
                 }
             }
         }
+
     }
 
     // Detection des collisions de type trigger
     private void OnTriggerEnter(Collider collision)
     {
+        /* =========================== TRIGGER AVEC LES BIDONS =========================== */
+
         // Lorsque l'helico detecte un trigger collision avec un objet qui a la le tag bidon
         if (collision.gameObject.tag == "bidon")
         {
@@ -191,18 +190,17 @@ public class DeplacementHelico : MonoBehaviour
             // Destruit cet objet
             Destroy(collision.gameObject);
 
-            // Augmente le niveau d'essence
-            niveauEssenceCourent += 30;
+            // Augmente le niveau d'essence mais de sorte a ce qu'il ne depasse jammais la quantite max
+            niveauEssenceCourent = Mathf.Clamp(niveauEssenceCourent += 50, 0, niveauEssenceMax);
         }
     }
 
     // Fonction coroutine qui gere les actions lorsque l'helico sera detruit
-    IEnumerator PartieTermine()
+    public IEnumerator PartieTermine()
     {
+        print("PARTIE TERMINE RIP");
         // Partie est termine
         finJeu = true;
-        // Active l'explosion
-        animExplosion.SetActive(true);
 
         // Change la couleur du mesh l'helico
         GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.2f, 0, 1);
