@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -33,10 +34,12 @@ public class DeplacementHelico : MonoBehaviour
     public GameObject heliceRef; // Variables Public GameObject qui sera reference aux helices de l'helico pour acceder a leur propriete de vitesse
 
 
-    /* ***************************** Variables pour gestion de l'essence ***************************** */
+    /* ************************************ Variables elements UI ************************************ */
     public float niveauEssenceMax; // niveau max de l'essence
     public float niveauEssenceCourent; // Niveau en temp reel de l'essence
     public Image imgNiveauEssence; // Variable qui memorise l'image qui represente le niveau d'essence
+    public GameObject alertEssence; // Variable qui fera reference a l'objet UI affichant l'alert du niveau d'essence
+    bool coroutineEssenceActive = false; // Variable bool pour verifier si la coroutine qui fait clignoter l'alerte de l'essence est en train de fonctionnner
 
 
     /* ************************* Variable pour fonctionalites suplementaires ************************* */
@@ -223,6 +226,20 @@ public class DeplacementHelico : MonoBehaviour
         // Relance la scene
         SceneManager.LoadScene(0);
     }
+    
+    // Fonction coroutine fesant clignoter le message d'alert lorsque le niveau d'essemce est bas
+    IEnumerator ClignoterAlertEssence()
+    {
+        // Boucle infinie
+        while (true)
+        {
+            // Attendre 1 seconde
+            yield return new WaitForSeconds(0.5f);
+
+            // Switch l'etat active de l'objet alertEssence
+            alertEssence.SetActive(!alertEssence.gameObject.activeInHierarchy);
+        }
+    }
 
     // Fonction qui gere le niveau d'essence
     void GestionEssence()
@@ -231,6 +248,21 @@ public class DeplacementHelico : MonoBehaviour
 
         // Ajustement de la barre blache representant le niveau d'essence (proprete fill amount)
         imgNiveauEssence.fillAmount = niveauEssenceCourent / niveauEssenceMax;
+        
+        // Si le niveau d'essence devient plus petit que 0.3 (30% restant) et que la coroutine n'est pas deja demare
+        if (imgNiveauEssence.fillAmount < 0.3 && !coroutineEssenceActive)
+        {
+            coroutineEssenceActive = true;
+            alertEssence.SetActive(true);
+            StartCoroutine(ClignoterAlertEssence());
+        }
+    
+    // Sinon si il reste de l'essence et que 
+        if (imgNiveauEssence.fillAmount > 0.3 && coroutineEssenceActive)
+        {
+            StopCoroutine(ClignoterAlertEssence());
+            alertEssence.SetActive(false);
+            coroutineEssenceActive = false;
+        }
     }
-
 }

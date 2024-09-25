@@ -20,13 +20,11 @@ public class GestionCompteur : MonoBehaviour
     public TextMeshProUGUI textCompteur; // public TextMeshProUGUI qui accede au component TextMeshPro de l'objet assigne, qui sera celui qui affiche le compteur
     public int leCompteur; // public int qui memorisera le temps de depart assigne et qui sera la valeur a afficher dans le texte du compteur
     private IEnumerator coroutineGestionTemps; // variable private IEnumerator pour assigner et mieux gerer la fonction coroutine
-
     public DeplacementHelico helico; // Reference au scripte DeplacementHelico
 
     // fonction public void qui gere l'activation du compteur
     public void ActivationCompteur()
     {
-
         // Assigne la fonction coroutine a la variable coroutineGestionTemps
         coroutineGestionTemps = Decompte();
 
