@@ -17,7 +17,7 @@ using UnityEngine.UI;
         - Gestion de l'essence et des actions qui sont liees a la variation de celui-ci;
 
     Par : Yanis Oulmane
-    Derniere Modification 24-09-2024
+    Derniere Modification 25-09-2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
@@ -68,8 +68,8 @@ public class DeplacementHelico : MonoBehaviour
         // Le multiplicateur de force varirera selon la vitesse des helices
         multiplicateurForce = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y * 2;
 
-        // Accepte Inputs si la partie n'est pas termine et qu'il reste de l'essence
-        if (!finJeu && heliceRef.GetComponent<TournerHelice>().moteurEnMarche && niveauEssenceCourent > 0)
+        // Accepte Inputs si partie pas termine, moteur en marche et reste de l'essence
+        if (!finJeu && heliceRef.GetComponent<TournerHelice>().moteurEnMarche && niveauEssenceCourent >= 1)
         {
             /* ==================== DEPLACEMENT SUR LES AXES ==================== */
 
@@ -121,8 +121,9 @@ public class DeplacementHelico : MonoBehaviour
     // Fonction stable a 50FPS, reservee aux objets physiques
     void FixedUpdate()
     {
+        // GetComponent<Rigidbody>().useGravity = heliceRef.GetComponent<TournerHelice>().moteurEnMarche ? true : false;
+
         // Si les helice tournent(vitesse > 100)
-        // *** Remarque : Helico utilisera automatiquement la gravite lors de sa destruction ***
         if (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y > 100)
         {
             // Desactivation de la gravite
@@ -141,6 +142,8 @@ public class DeplacementHelico : MonoBehaviour
 
         // Rearrange les rotations de l'helico si la partie est encore en cours pour eviter qu'il penche
         // Sinon il peut aller n'importe comment
+        // transform.localEulerAngles = !finJeu ? new Vector3(0f, transform.localEulerAngles.y, 0) : transform.localEulerAngles;
+
         if (!finJeu)
         {
             // Arrange les rotations de l'helico pour evite qu'il penche sur les axes X et Z
@@ -163,17 +166,20 @@ public class DeplacementHelico : MonoBehaviour
             for (int i = 0; i < 3; i++)
             {
                 // Regarde si la valeur absolue est superieur a 7.5
-                if (MathF.Abs(GetComponent<Rigidbody>().velocity[i]) > 7.5)
+                if (MathF.Abs(GetComponent<Rigidbody>().velocity[i]) > 5)
                 {
                     // Demmarage de coroutine PartieTermine()
                     StartCoroutine(PartieTermine());
 
-                    // Active l'explosion
-                    animExplosion.SetActive(true);
-
                     // Arret de la boucle
                     break;
                 }
+            }
+
+            // Si on touche le terrain avec avec le reservoir vide, fin de la partie automatiquement
+            if(niveauEssenceCourent <= 0)
+            {
+                StartCoroutine(PartieTermine());
             }
         }
 
@@ -194,25 +200,32 @@ public class DeplacementHelico : MonoBehaviour
             Destroy(collision.gameObject);
 
             // Augmente le niveau d'essence mais de sorte a ce qu'il ne depasse jammais la quantite max
-            niveauEssenceCourent = Mathf.Clamp(niveauEssenceCourent += 50, 0, niveauEssenceMax);
+            niveauEssenceCourent = Mathf.Clamp(niveauEssenceCourent += 25, 0, niveauEssenceMax);
         }
     }
 
     // Fonction coroutine qui gere les actions lorsque l'helico sera detruit
     public IEnumerator PartieTermine()
     {
-        print("PARTIE TERMINE RIP");
         // Partie est termine
         finJeu = true;
+
+        // Active l'explosion
+        animExplosion.SetActive(true);
 
         // Change la couleur du mesh l'helico
         GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.2f, 0, 1);
         heliceRef.GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.2f, 0, 1);
 
         // Modification des proprietes du rigide body de l'helico : frag, angularDrag et freezeRotation
-        GetComponent<Rigidbody>().drag = GetComponent<Rigidbody>().drag / 10;
-        GetComponent<Rigidbody>().angularDrag = GetComponent<Rigidbody>().angularDrag / 10;
+        GetComponent<Rigidbody>().drag = GetComponent<Rigidbody>().drag / 9;
+        GetComponent<Rigidbody>().angularDrag = GetComponent<Rigidbody>().angularDrag / 9;
         GetComponent<Rigidbody>().freezeRotation = false;
+        GetComponent<Rigidbody>().useGravity = true;
+
+        // Helices n'ont plus aucune force exerce sur l'helico
+        forceDeplacement = 0;
+        vitesseAvant = 0;
 
         // Vitesse avant de l'helico est de 0 (peux plus avancer)
         vitesseAvant = 0;
@@ -226,12 +239,12 @@ public class DeplacementHelico : MonoBehaviour
         // Relance la scene
         SceneManager.LoadScene(0);
     }
-    
+
     // Fonction coroutine fesant clignoter le message d'alert lorsque le niveau d'essemce est bas
     IEnumerator ClignoterAlertEssence()
     {
         // Boucle infinie
-        while (true)
+        while (niveauEssenceCourent / niveauEssenceMax < 0.3)
         {
             // Attendre 1 seconde
             yield return new WaitForSeconds(0.5f);
@@ -244,25 +257,45 @@ public class DeplacementHelico : MonoBehaviour
     // Fonction qui gere le niveau d'essence
     void GestionEssence()
     {
-        niveauEssenceCourent -= 5 * Time.deltaTime;
+        // Si il ne reste plus d'essence 
+        if (niveauEssenceCourent <= 0)
+        {
+            // Les helices n'appliquent plus de force a l'helico
+            forceDeplacement = 0;
+            vitesseAvant = 0;
+        }
+
+        // Baisse le niveau d'essence si le moteur tourne
+        if (heliceRef.GetComponent<TournerHelice>().moteurEnMarche)
+        {
+            niveauEssenceCourent -= niveauEssenceMax / 25 * Time.deltaTime;
+        }
 
         // Ajustement de la barre blache representant le niveau d'essence (proprete fill amount)
         imgNiveauEssence.fillAmount = niveauEssenceCourent / niveauEssenceMax;
-        
+
+
         // Si le niveau d'essence devient plus petit que 0.3 (30% restant) et que la coroutine n'est pas deja demare
-        if (imgNiveauEssence.fillAmount < 0.3 && !coroutineEssenceActive)
+        if (niveauEssenceCourent / niveauEssenceMax < 0.3 && !coroutineEssenceActive)
         {
+            // Memorise que la coroutine de clignotement est active
             coroutineEssenceActive = true;
+            // Montre l'alerte une premiere fois
             alertEssence.SetActive(true);
+            // Demmare coroutine qui fait clignoter l'alerte d'essence
             StartCoroutine(ClignoterAlertEssence());
         }
-    
-    // Sinon si il reste de l'essence et que 
-        if (imgNiveauEssence.fillAmount > 0.3 && coroutineEssenceActive)
+
+        // Sinon si il reste de l'essence et que 
+        if (niveauEssenceCourent / niveauEssenceMax > 0.3)
         {
+            // Arret de la coroutine
             StopCoroutine(ClignoterAlertEssence());
+            // Enleve le message d'alerte
             alertEssence.SetActive(false);
+            // Memorise que la coroutine n'est plus active
             coroutineEssenceActive = false;
         }
+
     }
 }

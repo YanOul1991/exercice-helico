@@ -10,7 +10,7 @@ using TMPro;
        - Mettre a jour l'affichage du compteur a chaque fois que le compteur baisse
 
     Par : Yanis Oulmane
-    Derniere Modification 24-09-2024
+    Derniere Modification 25-09-2024
  */
 public class GestionCompteur : MonoBehaviour
 {

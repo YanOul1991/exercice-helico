@@ -10,7 +10,7 @@ using UnityEngine;
 		- Effets d'accelerations au demarage et arret des helices;
 
 	Par : Yanis Oulmane
-	Derniere modification : 16-09-2024
+	Derniere modification : 25-09-2024
  */
 public class TournerHelice : MonoBehaviour
 {
@@ -33,7 +33,10 @@ public class TournerHelice : MonoBehaviour
 	void Update()
 	{
 		// Si on appuit sur la touche Retour, changement de l'etat du moteur et que le jeu n'est pas termine
-		if (Input.GetKeyDown(KeyCode.Return) && !refHelico.GetComponent<DeplacementHelico>().finJeu) moteurEnMarche = !moteurEnMarche;
+		if (Input.GetKeyDown(KeyCode.Return) && !refHelico.GetComponent<DeplacementHelico>().finJeu) 
+		{
+			moteurEnMarche = !moteurEnMarche;
+		}
 
 		if(refHelico.GetComponent<DeplacementHelico>().finJeu) 
 		{
@@ -55,7 +58,12 @@ public class TournerHelice : MonoBehaviour
 			// Helice ralenti jusqua a un minium de 0
 			vitesseHelice.y = Mathf.Clamp(vitesseHelice.y -= acceleration, 0f, vitesseRotationMax);
 		}
-		
+
+		// Le moteur est desactivite si la variable niveauEssenceCourent du scripte de deplacement de l'helico <= 0
+		if (refHelico.GetComponent<DeplacementHelico>().niveauEssenceCourent <= 0)
+		{
+			moteurEnMarche = false;
+		}
 	}
 	
 	void FixedUpdate()
