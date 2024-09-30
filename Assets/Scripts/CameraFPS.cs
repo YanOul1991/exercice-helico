@@ -22,7 +22,7 @@ public class CameraFPS : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // Variable locale pour la position vers laquel la camera bougera
         // D'abord elle recoit comme valeur la position intiale par defaut de la camera

@@ -15,9 +15,10 @@ using UnityEngine.UI;
         - Gestion des sons de helices de l'helico et du son globale;
         - Gestion collisions de l'helico et de l'action qui suit selon l'objet qui a ete touche;
         - Gestion de l'essence et des actions qui sont liees a la variation de celui-ci;
+        - Animation ouverture/fermute avec la touche 'O' en utilisant son Animator component;
 
     Par : Yanis Oulmane
-    Derniere Modification 25-09-2024
+    Derniere Modification 30-09-2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
@@ -51,7 +52,7 @@ public class DeplacementHelico : MonoBehaviour
     /* ================================================================================================= */
     /* ================================================================================================= */
 
-    // Fonction appele des le debut
+    // Fonction appele au debut
     void Start()
     {
         // Fait le plein d'essence
@@ -114,26 +115,14 @@ public class DeplacementHelico : MonoBehaviour
         // Vitesse reel / vitesse max  = une valeur entre 0 et 1 ce qui sera la valeur du volume de l'AudioSource
         GetComponent<AudioSource>().volume = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax;
         // La vitesse de pitch = 0.5 * la moitier du volume (entre 0 et 0.5). Pitch varie donc entre 0.5 en 1
-        GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);
-
+        GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);        
     }
 
     // Fonction stable a 50FPS, reservee aux objets physiques
     void FixedUpdate()
     {
-        // GetComponent<Rigidbody>().useGravity = heliceRef.GetComponent<TournerHelice>().moteurEnMarche ? true : false;
-
-        // Si les helice tournent(vitesse > 100)
-        if (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y > 100)
-        {
-            // Desactivation de la gravite
-            GetComponent<Rigidbody>().useGravity = false;
-        }
-        else
-        {
-            // Active la gravite dans le cas contraire
-            GetComponent<Rigidbody>().useGravity = true;
-        }
+        // Activer / desactiver la gravite si les helices on une vitesse y < 50 ou non
+        GetComponent<Rigidbody>().useGravity = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y < 50 ? true : false;
 
         // Applique la force au Rigidbody
         // On utilise seulment une fois AddRelativeForce() / AddRelativeTorque();
@@ -142,13 +131,7 @@ public class DeplacementHelico : MonoBehaviour
 
         // Rearrange les rotations de l'helico si la partie est encore en cours pour eviter qu'il penche
         // Sinon il peut aller n'importe comment
-        // transform.localEulerAngles = !finJeu ? new Vector3(0f, transform.localEulerAngles.y, 0) : transform.localEulerAngles;
-
-        if (!finJeu)
-        {
-            // Arrange les rotations de l'helico pour evite qu'il penche sur les axes X et Z
-            transform.localEulerAngles = new Vector3(0f, transform.localEulerAngles.y, 0);
-        }
+        transform.localEulerAngles = !finJeu ? new Vector3(0f, transform.localEulerAngles.y, 0) : transform.localEulerAngles;
 
         // Appel a chaque 50fps la fonction de gestion de l'essence
         GestionEssence();
@@ -170,19 +153,31 @@ public class DeplacementHelico : MonoBehaviour
                 {
                     // Demmarage de coroutine PartieTermine()
                     StartCoroutine(PartieTermine());
-
                     // Arret de la boucle
                     break;
                 }
             }
 
             // Si on touche le terrain avec avec le reservoir vide, fin de la partie automatiquement
-            if(niveauEssenceCourent <= 0)
+            if (niveauEssenceCourent <= 0)
             {
                 StartCoroutine(PartieTermine());
             }
+        }        
+        
+        /* ============================ COLLISIONS AVEC OBJETS ============================ */
+        
+        // Si collision avec le dome, c'est la fin de la partie
+        if (collision.gameObject.name == "Dome")
+        {
+            StartCoroutine(PartieTermine());
         }
-
+        
+        // Si collision avec un drone est detecte, fin de la partie
+        if (collision.gameObject.name == "DroneObj")
+        {
+            StartCoroutine(PartieTermine());
+        }
     }
 
     // Detection des collisions de type trigger
@@ -218,8 +213,8 @@ public class DeplacementHelico : MonoBehaviour
         heliceRef.GetComponent<MeshRenderer>().material.color = new Color(0.5f, 0.2f, 0, 1);
 
         // Modification des proprietes du rigide body de l'helico : frag, angularDrag et freezeRotation
-        GetComponent<Rigidbody>().drag = GetComponent<Rigidbody>().drag / 9;
-        GetComponent<Rigidbody>().angularDrag = GetComponent<Rigidbody>().angularDrag / 9;
+        GetComponent<Rigidbody>().drag = GetComponent<Rigidbody>().drag / 3;
+        GetComponent<Rigidbody>().angularDrag = GetComponent<Rigidbody>().angularDrag / 3;
         GetComponent<Rigidbody>().freezeRotation = false;
         GetComponent<Rigidbody>().useGravity = true;
 
@@ -236,6 +231,7 @@ public class DeplacementHelico : MonoBehaviour
 
         // Attendre 8 secondes
         yield return new WaitForSeconds(8);
+
         // Relance la scene
         SceneManager.LoadScene(0);
     }
@@ -243,14 +239,14 @@ public class DeplacementHelico : MonoBehaviour
     // Fonction coroutine fesant clignoter le message d'alert lorsque le niveau d'essemce est bas
     IEnumerator ClignoterAlertEssence()
     {
-        // Boucle infinie
+        // Boucle qui se repete tant que le niveau d'essence est bas
         while (niveauEssenceCourent / niveauEssenceMax < 0.3)
         {
             // Attendre 1 seconde
             yield return new WaitForSeconds(0.5f);
 
             // Switch l'etat active de l'objet alertEssence
-            alertEssence.SetActive(!alertEssence.gameObject.activeInHierarchy);
+            alertEssence.SetActive(!alertEssence.activeInHierarchy);
         }
     }
 
@@ -263,17 +259,17 @@ public class DeplacementHelico : MonoBehaviour
             // Les helices n'appliquent plus de force a l'helico
             forceDeplacement = 0;
             vitesseAvant = 0;
+
+            // Aide l'helico a mieux tomber
+            GetComponent<Rigidbody>().drag = GetComponent<Rigidbody>().drag / 3;
+            GetComponent<Rigidbody>().angularDrag = GetComponent<Rigidbody>().angularDrag / 3;
         }
 
         // Baisse le niveau d'essence si le moteur tourne
-        if (heliceRef.GetComponent<TournerHelice>().moteurEnMarche)
-        {
-            niveauEssenceCourent -= niveauEssenceMax / 25 * Time.deltaTime;
-        }
+        niveauEssenceCourent -= heliceRef.GetComponent<TournerHelice>().moteurEnMarche ? 1 * Time.deltaTime : 0;
 
         // Ajustement de la barre blache representant le niveau d'essence (proprete fill amount)
         imgNiveauEssence.fillAmount = niveauEssenceCourent / niveauEssenceMax;
-
 
         // Si le niveau d'essence devient plus petit que 0.3 (30% restant) et que la coroutine n'est pas deja demare
         if (niveauEssenceCourent / niveauEssenceMax < 0.3 && !coroutineEssenceActive)
@@ -296,6 +292,5 @@ public class DeplacementHelico : MonoBehaviour
             // Memorise que la coroutine n'est plus active
             coroutineEssenceActive = false;
         }
-
     }
 }

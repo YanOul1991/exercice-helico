@@ -1,26 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
+
 
 /* 
-    Scripte de l'objet GAMEMANAGER qui gere s'occupe d'appeler les fonction du sripte GestionCompteur se trouvant dans le meme objet parent:
-    
+    Scripte de l'objet GAMEMANAGER qui gere les fonctionalites suivantes :
+        - Activation de la scene du jeu lorsque le bouton commer est clique;
+        - Activation du compteur au commencement de la partie 
     Par : Yanis Oulmane
-    Derniere Modification 23-09-2024
+    Derniere Modification 30-09-2024
  */
 public class GAMEMANAGER : MonoBehaviour
 {
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        // Appel de la fonction qui active le compteur
-        GetComponent<GestionCompteur>().ActivationCompteur();
-    }
+    /* ====================================== VARIABLES  ======================================*/
 
-    // Update is called once per frame
+    public Button boutonCommencer;
+
     void Update()
     {
         
+    }
+
+    void CommencerJeu(){
+
+        StartCoroutine(AnimIntro());
+    }
+
+    IEnumerator AnimIntro()
+    {
+        while (true)
+        {
+            GetComponent<GestionCompteur>().ActivationCompteur();
+        }
     }
 }

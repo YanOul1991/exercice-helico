@@ -1,0 +1,318 @@
+fileFormatVersion: 2
+guid: 435bdebd043f94b8d97d6f2b93ad5b9c
+timeCreated: 1455910699
+licenseType: Free
+SketchUpImporter:
+  generateBackFace: 0
+  mergeCoplanarFaces: 0
+  selectedNodes: 000000000100000002000000030000000400000005000000060000000700000008000000090000000a0000000b0000000c0000000d0000000e0000000f000000100000001100000012000000130000001400000015000000160000001700000018000000190000001a0000001b0000001c0000001d0000001e0000001f000000200000002100000022000000230000002400000025000000260000002700000028000000290000002a0000002b0000002c0000002d0000002e0000002f000000300000003100000032000000330000003400000035000000360000003700000038000000390000003a0000003b0000003c0000003d0000003e0000003f000000400000004100000042000000430000004400000045000000460000004700000048000000490000004a0000004b0000004c0000004d0000004e0000004f000000500000005100000052000000530000005400000055000000560000005700000058000000590000005a0000005b0000005c0000005d0000005e0000005f000000600000006100000062000000630000006400000065000000660000006700000068000000690000006a000000
+  assetHash:
+    serializedVersion: 2
+    Hash: 82f91b638f5ad381060e613dc029f7ce
+  longitude: -105.283
+  latitude: 40.017000000000003
+  northCorrection: -0
+  fileUnit: 0
+  sketchUpImportData:
+    defaultCamera:
+      position: {x: .0704421178, y: 4.41366291, z: 1.09990561}
+      lookAt: {x: -.112595536, y: .844731987, z: 1.11102068}
+      up: {x: -.996846378, y: .0513131954, z: .0605337732}
+      fov: 35
+      aspectRatio: 0
+      orthoSize: 1
+      isPerspective: 1
+    scenes: []
+  serializedVersion: 18
+  fileIDToRecycleName:
+    100000: Component#1
+    100002: Component#10
+    100004: Component#10 1
+    100006: Component#10 2
+    100008: Component#20
+    100010: Component#21
+    100012: Component#21 1
+    100014: Component#21 2
+    100016: Component#21 3
+    100018: Component#21 4
+    100020: Component#21 5
+    100022: Component#22
+    100024: Component#22 1
+    100026: Component#22 2
+    100028: Component#22 3
+    100030: Component#22 4
+    100032: Component#22 5
+    100034: Component#22 6
+    100036: Component#22 7
+    100038: Component#23
+    100040: Component#24
+    100042: Component#24 1
+    100044: Component#24 2
+    100046: Component#25
+    100048: Component#30
+    100050: Component#31
+    100052: Component#32
+    100054: Component#32 1
+    100056: Component#32 2
+    100058: Component#32 3
+    100060: Component#32 4
+    100062: Component#32 5
+    100064: Component#32 6
+    100066: Component#32 7
+    100068: Component#33
+    100070: Component#33 1
+    100072: Component#33 2
+    100074: Component#33 3
+    100076: Component#33 4
+    100078: Component#33 5
+    100080: Component#33 6
+    100082: Component#33 7
+    100084: Component#34
+    100086: Component#35
+    100088: Component#36
+    100090: Component#37
+    100092: Component#38
+    100094: Component#5
+    100096: Component#5 1
+    100098: Component#5 2
+    100100: Component#6
+    100102: Component#6 1
+    100104: Component#6 2
+    100106: Component#6 3
+    100108: Component#6 4
+    100110: Component#6 5
+    100112: Component#7
+    100114: Component#7 1
+    100116: Component#7 2
+    100118: Component#8
+    100120: Component#8 1
+    100122: Component#8 2
+    100124: Component#9
+    100126: //RootNode
+    400000: Component#1
+    400002: Component#10
+    400004: Component#10 1
+    400006: Component#10 2
+    400008: Component#20
+    400010: Component#21
+    400012: Component#21 1
+    400014: Component#21 2
+    400016: Component#21 3
+    400018: Component#21 4
+    400020: Component#21 5
+    400022: Component#22
+    400024: Component#22 1
+    400026: Component#22 2
+    400028: Component#22 3
+    400030: Component#22 4
+    400032: Component#22 5
+    400034: Component#22 6
+    400036: Component#22 7
+    400038: Component#23
+    400040: Component#24
+    400042: Component#24 1
+    400044: Component#24 2
+    400046: Component#25
+    400048: Component#30
+    400050: Component#31
+    400052: Component#32
+    400054: Component#32 1
+    400056: Component#32 2
+    400058: Component#32 3
+    400060: Component#32 4
+    400062: Component#32 5
+    400064: Component#32 6
+    400066: Component#32 7
+    400068: Component#33
+    400070: Component#33 1
+    400072: Component#33 2
+    400074: Component#33 3
+    400076: Component#33 4
+    400078: Component#33 5
+    400080: Component#33 6
+    400082: Component#33 7
+    400084: Component#34
+    400086: Component#35
+    400088: Component#36
+    400090: Component#37
+    400092: Component#38
+    400094: Component#5
+    400096: Component#5 1
+    400098: Component#5 2
+    400100: Component#6
+    400102: Component#6 1
+    400104: Component#6 2
+    400106: Component#6 3
+    400108: Component#6 4
+    400110: Component#6 5
+    400112: Component#7
+    400114: Component#7 1
+    400116: Component#7 2
+    400118: Component#8
+    400120: Component#8 1
+    400122: Component#8 2
+    400124: Component#9
+    400126: //RootNode
+    2300000: Component#1
+    2300002: Component#21
+    2300004: Component#21 1
+    2300006: Component#21 2
+    2300008: Component#21 3
+    2300010: Component#21 4
+    2300012: Component#21 5
+    2300014: Component#22
+    2300016: Component#22 1
+    2300018: Component#22 2
+    2300020: Component#22 3
+    2300022: Component#22 4
+    2300024: Component#22 5
+    2300026: Component#22 6
+    2300028: Component#22 7
+    2300030: Component#24
+    2300032: Component#24 1
+    2300034: Component#24 2
+    2300036: Component#25
+    2300038: Component#33
+    2300040: Component#33 1
+    2300042: Component#33 2
+    2300044: Component#33 3
+    2300046: Component#33 4
+    2300048: Component#33 5
+    2300050: Component#33 6
+    2300052: Component#33 7
+    2300054: Component#35
+    2300056: Component#36
+    2300058: Component#37
+    2300060: Component#38
+    2300062: Component#5
+    2300064: Component#5 1
+    2300066: Component#5 2
+    2300068: Component#6
+    2300070: Component#6 1
+    2300072: Component#6 2
+    2300074: Component#6 3
+    2300076: Component#6 4
+    2300078: Component#6 5
+    2300080: Component#8
+    2300082: Component#8 1
+    2300084: Component#8 2
+    3300000: Component#1
+    3300002: Component#21
+    3300004: Component#21 1
+    3300006: Component#21 2
+    3300008: Component#21 3
+    3300010: Component#21 4
+    3300012: Component#21 5
+    3300014: Component#22
+    3300016: Component#22 1
+    3300018: Component#22 2
+    3300020: Component#22 3
+    3300022: Component#22 4
+    3300024: Component#22 5
+    3300026: Component#22 6
+    3300028: Component#22 7
+    3300030: Component#24
+    3300032: Component#24 1
+    3300034: Component#24 2
+    3300036: Component#25
+    3300038: Component#33
+    3300040: Component#33 1
+    3300042: Component#33 2
+    3300044: Component#33 3
+    3300046: Component#33 4
+    3300048: Component#33 5
+    3300050: Component#33 6
+    3300052: Component#33 7
+    3300054: Component#35
+    3300056: Component#36
+    3300058: Component#37
+    3300060: Component#38
+    3300062: Component#5
+    3300064: Component#5 1
+    3300066: Component#5 2
+    3300068: Component#6
+    3300070: Component#6 1
+    3300072: Component#6 2
+    3300074: Component#6 3
+    3300076: Component#6 4
+    3300078: Component#6 5
+    3300080: Component#8
+    3300082: Component#8 1
+    3300084: Component#8 2
+    4300000: Mesh Component#1
+    4300002: Mesh Component#22
+    4300004: Mesh Component#35
+    4300006: Mesh Component#38
+    4300008: Mesh Component#36
+    4300010: Mesh Component#37
+    4300012: Mesh Component#8
+    4300014: Mesh Component#6
+    4300016: Mesh Component#5
+    4300018: Mesh Component#24
+    4300020: Mesh Component#33
+    4300022: Mesh Component#21
+    4300024: Mesh Component#25
+  materials:
+    importMaterials: 1
+    materialName: 2
+    materialSearch: 0
+  animations:
+    legacyGenerateAnimations: 4
+    bakeSimulation: 0
+    optimizeGameObjects: 0
+    motionNodeName: 
+    animationImportErrors: 
+    animationImportWarnings: 
+    animationRetargetingWarnings: 
+    animationDoRetargetingWarnings: 0
+    animationCompression: 1
+    animationRotationError: .5
+    animationPositionError: .5
+    animationScaleError: .5
+    animationWrapMode: 0
+    extraExposedTransformPaths: []
+    clipAnimations: []
+    isReadable: 1
+  meshes:
+    lODScreenPercentages: []
+    globalScale: 2.53999996
+    meshCompression: 0
+    addColliders: 0
+    importBlendShapes: 1
+    swapUVChannels: 0
+    generateSecondaryUV: 0
+    useFileUnits: 1
+    optimizeMeshForGPU: 1
+    keepQuads: 0
+    weldVertices: 1
+    secondaryUVAngleDistortion: 8
+    secondaryUVAreaDistortion: 15.000001
+    secondaryUVHardAngle: 88
+    secondaryUVPackMargin: 4
+    useFileScale: 1
+  tangentSpace:
+    normalSmoothAngle: 60
+    splitTangentsAcrossUV: 1
+    normalImportMode: 0
+    tangentImportMode: 1
+  importAnimation: 0
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+    hasTranslationDoF: 0
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  animationType: 0
+  humanoidOversampling: 1
+  additionalBone: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

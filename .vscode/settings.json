@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "exercice-helico.sln"
+    "dotnet.defaultSolution": "1-creation-terrain.sln"
 }

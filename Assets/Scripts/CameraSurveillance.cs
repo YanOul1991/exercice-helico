@@ -11,14 +11,8 @@ public class CameraSurveillance : MonoBehaviour
 {
     public Transform laCibleASuivre; // Variable Transform que la camera regardera
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         // Transforme les rotation de la camera pour qu'elle s'aligne a la cible
         transform.LookAt(laCibleASuivre);

@@ -13,13 +13,7 @@ public class CameraFluide : MonoBehaviour
 
     public Vector3 laDistance; // public Vector3 qui memorisera la distance de la camera a l'helico
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
+    // Deplacement de la camera selon le framerate
     void FixedUpdate()
     {
         // Positionnement finale de la camera selon la position relaive de la cible et en additionnant la distance par rapport a celle-ci

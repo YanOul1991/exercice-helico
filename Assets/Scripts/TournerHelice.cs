@@ -23,12 +23,6 @@ public class TournerHelice : MonoBehaviour
 	public float acceleration; // Variable private float pour memoriser les accelerations des helices
 	public GameObject refHelico; // Reference a l'objet helico pour acceder a sa variable finJeu de son scripte
 
-	// Start is called before the first frame update
-	void Start()
-	{
-
-	}
-
 	// Update is called once per frame
 	void Update()
 	{
@@ -43,23 +37,13 @@ public class TournerHelice : MonoBehaviour
 			// Le moteur s'arrete
 			moteurEnMarche = false;
 			// Grande acceleration pour que les helices sarrentent rapidement
-			acceleration = 100;
+			acceleration = 50;
 		}
 
 		// Acceleration progressive des helices si le moteur est en marche jusqu'a vitesse max
-		if (moteurEnMarche)
-		{
-			// Acceleration lineraire des helices
-			// Augmenetation de la vitesse a chaque seconde jusqu'a atteindre la vitesse max
-			vitesseHelice.y = Mathf.Clamp(vitesseHelice.y += acceleration, 0f, vitesseRotationMax);
-		}
-		else
-		{
-			// Helice ralenti jusqua a un minium de 0
-			vitesseHelice.y = Mathf.Clamp(vitesseHelice.y -= acceleration, 0f, vitesseRotationMax);
-		}
+		vitesseHelice.y = Mathf.Clamp(vitesseHelice.y += moteurEnMarche ? acceleration : -acceleration, 0f, vitesseRotationMax);
 
-		// Le moteur est desactivite si la variable niveauEssenceCourent du scripte de deplacement de l'helico <= 0
+		// Le moteur est desactivite si la variable niveauEssenceCourent du scripte de deplacement de l'helico 
 		if (refHelico.GetComponent<DeplacementHelico>().niveauEssenceCourent <= 0)
 		{
 			moteurEnMarche = false;

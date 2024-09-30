@@ -4,12 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Windows;
 
 /* 
-    Script de gestion des camera. Activation et desactivation des camera appropries selon les inputes de l'utilisateur de facon dynamique
-    Gestion de son globale en activant et desactivant les AudioListeners de la camera Active
+    Script de gestion des camera aui aura les fonctionalites suivantes : 
+
+        - Activation/desactivation des camera selon l'input de facon dynamique;
+        - Mute/unmute le son globale du jeu en switchant l'etat actif des audio listeners des cameras;
+
     Par : Yanis Oulmane
+
     Derniere Modification 16-09-2024
  */
 public class GestionnnaireCameras : MonoBehaviour
