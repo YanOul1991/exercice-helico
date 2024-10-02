@@ -1,6 +1,4 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
 using System.Linq;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -42,20 +40,20 @@ public class GestionnnaireCameras : MonoBehaviour
         /* ====================================== CAMERAS ACTIVES ====================================== */
 
         // Regarde si la touche M est appuye
-        if (UnityEngine.Input.GetKeyDown(KeyCode.M))
+        if (Input.GetKeyDown(KeyCode.M))
         {
             // Change l'etat du bool sonGlobale
             sonGlobale = !sonGlobale;
         }
 
         // Regarde si la touche fait parties des numero de camera (1, 2, 3 ,4) et que la partie n'est pas termine
-        if (numCamera.Contains(UnityEngine.Input.inputString) && !refHelico.GetComponent<DeplacementHelico>().finJeu)
+        if (numCamera.Contains(Input.inputString) && !refHelico.GetComponent<DeplacementHelico>().finJeu)
         {
             // Desactivation de la camera active
             Camera.main.gameObject.SetActive(false);
 
             // Activation de la camera selon le numero de camera choisit
-            lesCameras[Array.IndexOf(numCamera, UnityEngine.Input.inputString)].SetActive(true);
+            lesCameras[Array.IndexOf(numCamera, Input.inputString)].SetActive(true);
         }
 
         // Si partie est termine

@@ -1,8 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -18,7 +15,7 @@ using UnityEngine.UI;
         - Animation ouverture/fermute avec la touche 'O' en utilisant son Animator component;
 
     Par : Yanis Oulmane
-    Derniere Modification 30-09-2024
+    Derniere Modification 02-10-2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
@@ -26,28 +23,30 @@ public class DeplacementHelico : MonoBehaviour
     /* =================================== DECLARATION DES VARIABLES =================================== */
     /* ================================================================================================= */
 
+    public GAMEMANAGER gameManager; // Reference au scripte GAMEMANGER de l'objet GAMEMANGER
+
     /* **************************** Variables pour gestion des deplacements **************************** */
-    float multiplicateurForce; // variable qui memorize un multiplicateur de force qui sera applique aux forces qui font deplacer l'helico
-    float forceDeplacement; // Variable qui memorise les forces de deplacement sur les axes
-    float forceRotation; // Variable qui memorise la force de torsion/rotation sur l'axe Y
-    float vitesseAvant; // Variable qui memorize la vitesse de deplacment vers l'avant de l'helico
-    public float vitesseAvantMax; // Variable qui memorize la vitesse de deplacement avant maximal de l'helico
-    public GameObject heliceRef; // Variables Public GameObject qui sera reference aux helices de l'helico pour acceder a leur propriete de vitesse
+    float multiplicateurForce; // variable qui memorize un multiplicateur de force qui sera applique aux forces qui font deplacer l'helico;
+    float forceDeplacement; // Variable qui memorise les forces de deplacement sur les axes;
+    float forceRotation; // Variable qui memorise la force de torsion/rotation sur l'axe Y;
+    float vitesseAvant; // Variable qui memorize la vitesse de deplacment vers l'avant de l'helico;
+    public float vitesseAvantMax; // Variable qui memorize la vitesse de deplacement avant maximal de l'helico;
+    public GameObject heliceRef; // Variables Public GameObject qui sera reference aux helices de l'helico pour acceder a leur propriete de vitesse;
 
 
     /* ************************************ Variables elements UI ************************************ */
-    public float niveauEssenceMax; // niveau max de l'essence
-    public float niveauEssenceCourent; // Niveau en temp reel de l'essence
-    public Image imgNiveauEssence; // Variable qui memorise l'image qui represente le niveau d'essence
-    public GameObject alertEssence; // Variable qui fera reference a l'objet UI affichant l'alert du niveau d'essence
-    bool coroutineEssenceActive = false; // Variable bool pour verifier si la coroutine qui fait clignoter l'alerte de l'essence est en train de fonctionnner
+    public float niveauEssenceMax; // niveau max de l'essence;
+    public float niveauEssenceCourent; // Niveau en temp reel de l'essence;
+    public Image imgNiveauEssence; // Variable qui memorise l'image qui represente le niveau d'essence;
+    public GameObject alertEssence; // Variable qui fera reference a l'objet UI affichant l'alert du niveau d'essence;
+    bool coroutineEssenceActive = false; // Variable bool pour verifier si la coroutine qui fait clignoter l'alerte de l'essence est en train de fonctionnner;
 
 
-    /* ************************* Variable pour fonctionalites suplementaires ************************* */
-    public bool finJeu = false; // Variable bool memorisant si l'helico est detruit, donc la fin du jeu
-    public AudioClip sonCollecte; // Son qui joue lors de la collecte d'un bidon d'essence
-    public GameObject animExplosion; // Effet particules d'explosion lors de la destruction de l'helico
-    public GameObject cameraFinJeu; // Camera active lors de la fin de la partie
+    /* ************************* Variables pour fonctionalites suplementaires ************************* */
+    public bool finJeu = false; // Variable bool memorisant si l'helico est detruit, donc la fin du jeu;
+    public AudioClip sonCollecte; // Son qui joue lors de la collecte d'un bidon d'essence;
+    public GameObject animExplosion; // Effet particules d'explosion lors de la destruction de l'helico;
+    public GameObject cameraFinJeu; // Camera active lors de la fin de la partie;
 
     /* ================================================================================================= */
     /* ================================================================================================= */
@@ -178,6 +177,13 @@ public class DeplacementHelico : MonoBehaviour
         {
             StartCoroutine(PartieTermine());
         }
+
+        // Si touche l'objectif alors victoire = true
+        if (collision.gameObject.name == "pisteFin")
+        {
+            // Appel de la coroutine de scene de victoire
+            StartCoroutine(gameManager.SceneVictoire());
+        }
     }
 
     // Detection des collisions de type trigger
@@ -266,7 +272,7 @@ public class DeplacementHelico : MonoBehaviour
         }
 
         // Baisse le niveau d'essence si le moteur tourne
-        niveauEssenceCourent -= heliceRef.GetComponent<TournerHelice>().moteurEnMarche ? 1 * Time.deltaTime : 0;
+        niveauEssenceCourent -= heliceRef.GetComponent<TournerHelice>().moteurEnMarche ? 2 * Time.deltaTime : 0;
 
         // Ajustement de la barre blache representant le niveau d'essence (proprete fill amount)
         imgNiveauEssence.fillAmount = niveauEssenceCourent / niveauEssenceMax;
