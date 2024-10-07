@@ -13,6 +13,7 @@ using UnityEngine.UI;
         - Gestion collisions de l'helico et de l'action qui suit selon l'objet qui a ete touche;
         - Gestion de l'essence et des actions qui sont liees a la variation de celui-ci;
         - Animation ouverture/fermute avec la touche 'O' en utilisant son Animator component;
+        - Effets de particules avec l'eau;
 
     Par : Yanis Oulmane
     Derniere Modification 02-10-2024
@@ -47,6 +48,8 @@ public class DeplacementHelico : MonoBehaviour
     public AudioClip sonCollecte; // Son qui joue lors de la collecte d'un bidon d'essence;
     public GameObject animExplosion; // Effet particules d'explosion lors de la destruction de l'helico;
     public GameObject cameraFinJeu; // Camera active lors de la fin de la partie;
+    public GameObject objetEclaboussure; // Reference au GameObject qui parente les objets ayant des effets d'eclaboussures;
+    public GameObject[] effetEclaboussure; // References aux scriptes ParticuleEclaboussure;
 
     /* ================================================================================================= */
     /* ================================================================================================= */
@@ -114,7 +117,7 @@ public class DeplacementHelico : MonoBehaviour
         // Vitesse reel / vitesse max  = une valeur entre 0 et 1 ce qui sera la valeur du volume de l'AudioSource
         GetComponent<AudioSource>().volume = heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax;
         // La vitesse de pitch = 0.5 * la moitier du volume (entre 0 et 0.5). Pitch varie donc entre 0.5 en 1
-        GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);        
+        GetComponent<AudioSource>().pitch = 0.5f + (heliceRef.GetComponent<TournerHelice>().vitesseHelice.y / heliceRef.GetComponent<TournerHelice>().vitesseRotationMax / 2);
     }
 
     // Fonction stable a 50FPS, reservee aux objets physiques
@@ -162,16 +165,16 @@ public class DeplacementHelico : MonoBehaviour
             {
                 StartCoroutine(PartieTermine());
             }
-        }        
-        
+        }
+
         /* ============================ COLLISIONS AVEC OBJETS ============================ */
-        
+
         // Si collision avec le dome, c'est la fin de la partie
         if (collision.gameObject.name == "Dome")
         {
             StartCoroutine(PartieTermine());
         }
-        
+
         // Si collision avec un drone est detecte, fin de la partie
         if (collision.gameObject.name == "DroneObj")
         {
@@ -202,6 +205,49 @@ public class DeplacementHelico : MonoBehaviour
 
             // Augmente le niveau d'essence mais de sorte a ce qu'il ne depasse jammais la quantite max
             niveauEssenceCourent = Mathf.Clamp(niveauEssenceCourent += 25, 0, niveauEssenceMax);
+        }
+
+        // Lorsque qu'on trouche le trigger collider de l'eau
+        if (collision.gameObject.name == "Eau")
+        {
+            // Active les particules d'eclaboussure
+            objetEclaboussure.SetActive(true);
+        }
+    }
+
+    private void OnTriggerStay(Collider collision)
+    {
+        // Lorsqu'on reste dans le collider
+        if (collision.gameObject.name == "Eau")
+        {
+            if (GetComponent<Rigidbody>().velocity[0] > 0)
+            {
+                foreach (GameObject effet in effetEclaboussure)
+                {
+                    // Modification de la propriete rateOverTime du module Emission selon la vitesse de l'helico
+                    effet.GetComponent<ParticulesEclaboussures>().moduleEmission.rateOverTime = 100;
+
+                }
+            }
+            else
+            {
+                foreach (GameObject effet in effetEclaboussure)
+                {
+                    // Modification de la propriete rateOverTime du module Emission selon la vitesse de l'helico
+                    effet.GetComponent<ParticulesEclaboussures>().moduleEmission.rateOverTime = 0;
+
+                }
+            }
+        }
+    }
+
+    private void OnTriggerExit(Collider collision)
+    {
+        // Lorsqu'on exit le collider de l'objet eau
+        if (collision.gameObject.name == "Eau")
+        {
+            // Desactive l'effet d'eclaboussure
+            objetEclaboussure.SetActive(false);
         }
     }
 
