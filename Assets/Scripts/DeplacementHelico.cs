@@ -16,7 +16,7 @@ using UnityEngine.UI;
         - Effets de particules avec l'eau;
 
     Par : Yanis Oulmane
-    Derniere Modification 02-10-2024
+    Derniere Modification 07/10/2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
@@ -49,7 +49,9 @@ public class DeplacementHelico : MonoBehaviour
     public GameObject animExplosion; // Effet particules d'explosion lors de la destruction de l'helico;
     public GameObject cameraFinJeu; // Camera active lors de la fin de la partie;
     public GameObject objetEclaboussure; // Reference au GameObject qui parente les objets ayant des effets d'eclaboussures;
-    public GameObject[] effetEclaboussure; // References aux scriptes ParticuleEclaboussure;
+
+    public ParticleSystem[] systemesParticules;
+    ParticleSystem.EmissionModule[] modEmission;
 
     /* ================================================================================================= */
     /* ================================================================================================= */
@@ -59,6 +61,13 @@ public class DeplacementHelico : MonoBehaviour
     {
         // Fait le plein d'essence
         niveauEssenceCourent = niveauEssenceMax;
+
+        modEmission = new ParticleSystem.EmissionModule[systemesParticules.Length];
+
+        for (int i = 0; i < systemesParticules.Length; i++)
+        {
+            modEmission[i] = systemesParticules[i].emission;
+        }
     }
 
     // Fonction update appele a chaque frame qui sera principalement pour les detections de touche et variations des variables de force pour les deplacements
@@ -215,28 +224,13 @@ public class DeplacementHelico : MonoBehaviour
         }
     }
 
-    private void OnTriggerStay(Collider collision)
+    void OnTriggerStay(Collider collision)
     {
-        // Lorsqu'on reste dans le collider
         if (collision.gameObject.name == "Eau")
         {
-            if (GetComponent<Rigidbody>().velocity[0] > 0)
+            for (int i = 0; i < modEmission.Length; i++)
             {
-                foreach (GameObject effet in effetEclaboussure)
-                {
-                    // Modification de la propriete rateOverTime du module Emission selon la vitesse de l'helico
-                    effet.GetComponent<ParticulesEclaboussures>().moduleEmission.rateOverTime = 100;
-
-                }
-            }
-            else
-            {
-                foreach (GameObject effet in effetEclaboussure)
-                {
-                    // Modification de la propriete rateOverTime du module Emission selon la vitesse de l'helico
-                    effet.GetComponent<ParticulesEclaboussures>().moduleEmission.rateOverTime = 0;
-
-                }
+                modEmission[i].rateOverTime = 10 + 50 * Time.deltaTime;
             }
         }
     }

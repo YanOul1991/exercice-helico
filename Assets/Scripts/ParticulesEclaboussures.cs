@@ -3,8 +3,9 @@ using UnityEngine;
 
 public class ParticulesEclaboussures : MonoBehaviour
 {
-    public ParticleSystem systemeParticules; // Reference au component ParticleSystem du GameObject;
-    public ParticleSystem.EmissionModule moduleEmission; // Reference au Module Emission du ParticleSystem;
+    public Rigidbody helico;
+    ParticleSystem systemeParticules; // Reference au component ParticleSystem du GameObject;
+    ParticleSystem.EmissionModule moduleEmission; // Reference au Module Emission du ParticleSystem;
 
     // Start is called before the first frame update
     void Start()
@@ -16,5 +17,10 @@ public class ParticulesEclaboussures : MonoBehaviour
 
         // EmissionModule
         moduleEmission = systemeParticules.emission;
+    }
+
+    void Update()
+    {
+        moduleEmission.rateOverTime = MathF.Abs(helico.velocity.x) * 100;
     }
 }
