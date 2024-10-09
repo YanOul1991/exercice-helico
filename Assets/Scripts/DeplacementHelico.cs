@@ -16,7 +16,7 @@ using UnityEngine.UI;
         - Effets de particules avec l'eau;
 
     Par : Yanis Oulmane
-    Derniere Modification 07/10/2024
+    Derniere Modification 09/10/2024
  */
 public class DeplacementHelico : MonoBehaviour
 {
@@ -48,10 +48,13 @@ public class DeplacementHelico : MonoBehaviour
     public AudioClip sonCollecte; // Son qui joue lors de la collecte d'un bidon d'essence;
     public GameObject animExplosion; // Effet particules d'explosion lors de la destruction de l'helico;
     public GameObject cameraFinJeu; // Camera active lors de la fin de la partie;
-    public GameObject objetEclaboussure; // Reference au GameObject qui parente les objets ayant des effets d'eclaboussures;
 
-    public ParticleSystem[] systemesParticules;
-    ParticleSystem.EmissionModule[] modEmission;
+
+    /* ************************************* EFFETS DE PARTICULES ************************************* */
+    public GameObject objetEclaboussure; // Reference au GameObject qui parente les objets ayant des effets d'eclaboussures;
+    public ParticleSystem[] systemesParticules; // Array de reference au ParticleSystem de plusieurs objets
+    ParticleSystem.MainModule[] mainModule; // Array de reference aux MainModule a chaque reference des systemesParticules[];
+    ParticleSystem.EmissionModule[] emissionModule; // Array de references aux EmissionModule a chaque reference de ParticleSystem du array systemesParticules[];
 
     /* ================================================================================================= */
     /* ================================================================================================= */
@@ -62,11 +65,20 @@ public class DeplacementHelico : MonoBehaviour
         // Fait le plein d'essence
         niveauEssenceCourent = niveauEssenceMax;
 
-        modEmission = new ParticleSystem.EmissionModule[systemesParticules.Length];
+        // Nouveaux array de de meme longueur que le nombre de particle systems
+        mainModule = new ParticleSystem.MainModule[systemesParticules.Length];
+        emissionModule = new ParticleSystem.EmissionModule[systemesParticules.Length];
 
+        // Desactivation de l'object parent contenant les effets d'eclaboussure
+        objetEclaboussure.SetActive(false);
+
+        // References aux different modules des ParticleSystem
         for (int i = 0; i < systemesParticules.Length; i++)
         {
-            modEmission[i] = systemesParticules[i].emission;
+            // MainModule
+            mainModule[i] = systemesParticules[i].main;
+            // EmissionModule
+            emissionModule[i] = systemesParticules[i].emission;
         }
     }
 
@@ -178,23 +190,23 @@ public class DeplacementHelico : MonoBehaviour
 
         /* ============================ COLLISIONS AVEC OBJETS ============================ */
 
-        // Si collision avec le dome, c'est la fin de la partie
-        if (collision.gameObject.name == "Dome")
+        // Regarde le nom du GameObject avec lequel la collision a eu lieu
+        switch (collision.gameObject.name)
         {
-            StartCoroutine(PartieTermine());
-        }
-
-        // Si collision avec un drone est detecte, fin de la partie
-        if (collision.gameObject.name == "DroneObj")
-        {
-            StartCoroutine(PartieTermine());
-        }
-
-        // Si touche l'objectif alors victoire = true
-        if (collision.gameObject.name == "pisteFin")
-        {
-            // Appel de la coroutine de scene de victoire
-            StartCoroutine(gameManager.SceneVictoire());
+            case "Dome":
+                // Appel de la coroutine de la fin de la partie
+                StartCoroutine(PartieTermine());
+                break;
+            case "DroneObj":
+                // Appel de la coroutine de la fin de la partie
+                StartCoroutine(PartieTermine());
+                break;
+            case "pisteFin":
+                // Appel de la coroutine de la scene de victoire
+                StartCoroutine(gameManager.SceneVictoire());
+                break;
+            default:
+                break;
         }
     }
 
@@ -224,17 +236,26 @@ public class DeplacementHelico : MonoBehaviour
         }
     }
 
+    // Detection des TriggerStay
     void OnTriggerStay(Collider collision)
     {
+        // Lorsque l'helico reste en collision trigger avec l'eau
         if (collision.gameObject.name == "Eau")
-        {
-            for (int i = 0; i < modEmission.Length; i++)
+        {   
+
+            // Pour chaqu'un des objets ayant un Particle System
+            for (int i = 0; i < systemesParticules.Length; i++)
             {
-                modEmission[i].rateOverTime = 10 + 50 * Time.deltaTime;
+                // Modification du Simulation Speed du Main Module selon la vitesse de deplacement avant d l'helico
+                mainModule[i].simulationSpeed = vitesseAvant / vitesseAvantMax > 0 ? vitesseAvant / vitesseAvantMax * 3 : 0;
+
+                // Modification du Rate Over Time du Emission Module selon la vitesse de deplacement avant de l'helico
+                emissionModule[i].rateOverTime = vitesseAvant / vitesseAvantMax > 0 ? vitesseAvant / vitesseAvantMax * 400 : 0;
             }
         }
     }
 
+    // Detectin des TriggerExit
     private void OnTriggerExit(Collider collision)
     {
         // Lorsqu'on exit le collider de l'objet eau

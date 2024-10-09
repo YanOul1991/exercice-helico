@@ -18,7 +18,7 @@ public class GAMEMANAGER : MonoBehaviour
     public GameObject objetJeu; // Reference a l'objet qui contient les element principaux du jeu;
     public GameObject cameraIntro; // Reference a l'objet de camera d'intro;
     public AnimationClip animCameraIntro; // Reference a l'animation de la camera d'intro;
-    public GameObject[] lesUI; // GameObject contenant toutes les qui changeraons d'etat;
+    public GameObject[] lesUI; // Liste des UI qui changerons d'etat
 
 
     // Fonction public qui demmare la coroutine d'intro du jeu qui sera appele lorsquon clique sur le btn commencer

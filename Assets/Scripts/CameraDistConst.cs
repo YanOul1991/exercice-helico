@@ -10,7 +10,7 @@ using UnityEngine;
 public class CameraDistConst : MonoBehaviour
 {
     public GameObject laCible; // public GameObject qui sera la cible que suivra la camera
-    public UnityEngine.Vector3 laDistance; // public Vector3 pour appliquer une distance de la camera par rapport a la cible
+    public Vector3 laDistance; // public Vector3 pour appliquer une distance de la camera par rapport a la cible
 
     // Deplacement de la camera selon le framerate
     void FixedUpdate()
